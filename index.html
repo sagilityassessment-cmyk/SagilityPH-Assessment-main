@@ -839,11 +839,35 @@
     const portalAuth = portalLoginApp.auth();
     const portalSessionKey = 'assessment-portal-authenticated';
     const portalSessionStartedKey = 'assessment-portal-session-started';
-    const portalSessionDuration = 5 * 60 * 60 * 1000;
+    const portalSessionDuration = 24 * 60 * 60 * 1000;
     const portalLoginView = document.getElementById('portalLoginView');
     const portalLoginForm = document.getElementById('portalLoginForm');
     const portalLoginMessage = document.getElementById('portalLoginMessage');
     const portalLoginButton = portalLoginForm.querySelector('.portal-login-submit');
+    let portalLogoutTimer;
+
+    function getPortalSessionExpiry(startedAt) {
+      const loginExpiry = startedAt + portalSessionDuration;
+      const dailyExpiry = new Date(startedAt);
+      dailyExpiry.setHours(23, 59, 59, 999);
+      if (dailyExpiry.getTime() <= startedAt) {
+        dailyExpiry.setDate(dailyExpiry.getDate() + 1);
+      }
+      return Math.min(loginExpiry, dailyExpiry.getTime());
+    }
+
+    function schedulePortalAutoLogout(startedAt) {
+      window.clearTimeout(portalLogoutTimer);
+      const expiry = getPortalSessionExpiry(startedAt);
+      const delay = expiry - Date.now();
+      if (delay <= 0) return;
+      portalLogoutTimer = window.setTimeout(async () => {
+        sessionStorage.removeItem(portalSessionKey);
+        sessionStorage.removeItem(portalSessionStartedKey);
+        await portalAuth.signOut().catch(() => {});
+        window.location.replace('./index.html');
+      }, delay);
+    }
 
     function unlockAssessmentPortal() {
       document.body.classList.remove('portal-locked');
@@ -854,8 +878,9 @@
     const portalSessionStarted = Number(sessionStorage.getItem(portalSessionStartedKey));
     if (sessionStorage.getItem(portalSessionKey) === 'true'
       && Number.isFinite(portalSessionStarted)
-      && Date.now() - portalSessionStarted < portalSessionDuration) {
+      && Date.now() < getPortalSessionExpiry(portalSessionStarted)) {
       unlockAssessmentPortal();
+      schedulePortalAutoLogout(portalSessionStarted);
     } else {
       sessionStorage.removeItem(portalSessionKey);
       sessionStorage.removeItem(portalSessionStartedKey);
@@ -887,9 +912,11 @@
       portalLoginButton.firstChild.textContent = 'Signing in... ';
       try {
         await portalAuth.signInWithEmailAndPassword(email, password);
+        const sessionStartedAt = Date.now();
         sessionStorage.setItem(portalSessionKey, 'true');
-        sessionStorage.setItem(portalSessionStartedKey, String(Date.now()));
+        sessionStorage.setItem(portalSessionStartedKey, String(sessionStartedAt));
         unlockAssessmentPortal();
+        schedulePortalAutoLogout(sessionStartedAt);
       } catch {
         portalLoginMessage.textContent = 'Incorrect email or password.';
         portalLoginButton.disabled = false;
@@ -1992,7 +2019,10 @@
       try {
         await firebaseAuthReady;
         const batch = firestore.batch();
-        ids.forEach(id => batch.delete(firestore.collection('sentHistory').doc(id)));
+        ids.forEach(id => batch.update(firestore.collection('sentHistory').doc(id), {
+          deleted: true,
+          deletedAt: Date.now()
+        }));
         await batch.commit();
 
         const deletedIds = new Set(ids);
@@ -2026,7 +2056,10 @@
       try {
         await firebaseAuthReady;
         const batch = firestore.batch();
-        ids.forEach(id => batch.delete(firestore.collection('sentHistory').doc(id)));
+        ids.forEach(id => batch.update(firestore.collection('sentHistory').doc(id), {
+          deleted: true,
+          deletedAt: Date.now()
+        }));
         await batch.commit();
         const deletedIds = new Set(ids);
         sentHistoryRecords = sentHistoryRecords.filter(record => !deletedIds.has(record.recordId));
@@ -2059,7 +2092,10 @@
       try {
         await firebaseAuthReady;
         const batch = firestore.batch();
-        ids.forEach(id => batch.delete(firestore.collection('sentHistory').doc(id)));
+        ids.forEach(id => batch.update(firestore.collection('sentHistory').doc(id), {
+          deleted: true,
+          deletedAt: Date.now()
+        }));
         await batch.commit();
 
         const deletedIds = new Set(ids);
@@ -2437,7 +2473,10 @@
       try {
         await ensureFirebaseAuth();
         const batch = firestore.batch();
-        ids.forEach(id => batch.delete(firestore.collection('typingResults').doc(id)));
+        ids.forEach(id => batch.update(firestore.collection('typingResults').doc(id), {
+          deleted: true,
+          deletedAt: Date.now()
+        }));
         await batch.commit();
         ids.forEach(id => selectedTypingResultIds.delete(id));
       } catch (error) {
