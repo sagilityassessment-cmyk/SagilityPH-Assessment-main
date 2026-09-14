@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typing Test – Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-card">
+      <h1 class="app-title">Typing Test</h1>
+      <div class="app-sub">Enter candidate details to begin the assessment</div>
+      <form id="loginForm" autocomplete="off" class="login-form">
+        <div class="form-row">
+          <label for="fullName" class="form-label">Name:</label>
+          <input id="fullName" class="form-input" type="text" placeholder="" required />
+        </div>
+        <div class="form-row">
+          <label for="location" class="form-label">Location:</label>
+          <select id="location" class="form-input" required>
+            <option value="" disabled selected>Select location</option>
+            <option value="Iloilo City">Iloilo City</option>
+            <option value="Quezon City">Quezon City</option>
+            <option value="Alabang">Alabang</option>
+            <option value="Bohol">Bohol</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="seatNumber" class="form-label">Seat number:</label>
+          <select id="seatNumber" class="form-input" required>
+            <option value="" disabled selected>Select seat number</option>
+          </select>
+        </div>
+        <button id="startTestBtn" type="button" class="primary-btn">Start Typing Test</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    const seatNumberSelect = document.getElementById('seatNumber');
+    const locationSelect = document.getElementById('location');
+    const locationFromPortal = new URLSearchParams(window.location.search).get('location');
+    const savedLocation = localStorage.getItem('location');
+    if ([...locationSelect.options].some(option => option.value === locationFromPortal)) {
+      locationSelect.value = locationFromPortal;
+    } else if ([...locationSelect.options].some(option => option.value === savedLocation)) {
+      locationSelect.value = savedLocation;
+    }
+    const remoteOption = document.createElement('option');
+    remoteOption.value = 'Remote';
+    remoteOption.textContent = 'Remote';
+    seatNumberSelect.appendChild(remoteOption);
+    for (let seat = 1; seat <= 30; seat += 1) {
+      const option = document.createElement('option');
+      option.value = String(seat);
+      option.textContent = `Seat ${seat}`;
+      seatNumberSelect.appendChild(option);
+    }
+
+    document.getElementById('startTestBtn').addEventListener('click', function(){
+      const name = document.getElementById('fullName').value.trim();
+      const location = locationSelect.value;
+      const seatNumber = document.getElementById('seatNumber').value;
+      if(!name || !location || !seatNumber){ return; }
+      localStorage.setItem('fullName', name);
+      localStorage.setItem('location', location);
+      localStorage.setItem('seatNumber', seatNumber);
+      localStorage.setItem('date', new Date().toISOString().slice(0, 10));
+      window.location.href = 'app.html';
+    });
+    // allow Enter key
+    document.getElementById('loginForm').addEventListener('keydown', function(e){
+      if(e.key==='Enter'){ e.preventDefault(); document.getElementById('startTestBtn').click(); }
+    });
+  </script>
+</body>
+</html>

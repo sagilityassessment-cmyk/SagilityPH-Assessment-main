@@ -1,0 +1,2483 @@
+<!DOCTYPE html>
+<html lang="en" class="portal-login-locked">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sagility Recruiter and Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=mobile-header-1">
+</head>
+<body class="portal-locked">
+  <main id="portalLoginView" class="portal-login-view" aria-labelledby="portalLoginTitle">
+    <section class="portal-login-card">
+      <img class="portal-login-logo" src="logo.png" alt="Sagility">
+      <h1 id="portalLoginTitle">AssessmentPH <em>Portal</em></h1>
+      <p>Sign in to access the recruiter and admin portal.</p>
+      <form id="portalLoginForm">
+        <label for="portalLoginEmail">Company email</label>
+        <input id="portalLoginEmail" type="email" autocomplete="username" required>
+        <label for="portalLoginPassword">Password</label>
+        <input id="portalLoginPassword" type="password" autocomplete="current-password" required>
+        <button type="submit" class="portal-login-submit">Log in <span aria-hidden="true">↗</span></button>
+        <button type="button" id="portalResetPassword" class="portal-reset-password">Reset password by email</button>
+        <p id="portalLoginMessage" role="alert"></p>
+      </form>
+    </section>
+  </main>
+  <div id="emailStatusPopup" class="email-status-popup hidden" role="status" aria-live="polite">
+    <div class="email-status-popup-card">
+      <button id="closeEmailStatusPopup" class="email-status-popup-close" type="button" aria-label="Close email status">&times;</button>
+      <div id="emailStatusPopupMessage" class="email-status-popup-message"></div>
+    </div>
+  </div>
+  <!-- BACKGROUND DESIGN ELEMENTS -->
+  <div class="bg-decoration bg-top-left">
+    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#39b8ff;stop-opacity:0.15" />
+          <stop offset="100%" style="stop-color:#4d7cff;stop-opacity:0.1" />
+        </linearGradient>
+      </defs>
+      <circle cx="80" cy="80" r="120" fill="url(#bgGrad1)"/>
+      <circle cx="200" cy="-50" r="100" fill="url(#bgGrad1)" opacity="0.6"/>
+    </svg>
+  </div>
+  
+  <div class="bg-decoration bg-bottom-right">
+    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#4d7cff;stop-opacity:0.12" />
+          <stop offset="100%" style="stop-color:#4d9fe8;stop-opacity:0.08" />
+        </linearGradient>
+      </defs>
+      <circle cx="320" cy="320" r="150" fill="url(#bgGrad2)"/>
+      <circle cx="200" cy="400" r="120" fill="url(#bgGrad2)" opacity="0.6"/>
+    </svg>
+  </div>
+
+  <!-- HEADER -->
+  <header class="top">
+    <div class="logo">
+      <img src="logo.png" alt="Sagility Logo" class="logo-img">
+    </div>
+    <div class="header-text-box">
+      <h1>ASSESSMENT PH <span>PORTAL</span></h1>
+      <p>This tool is designed for remote and virtual assessments. It is intended for internal use only. Only authorized Sagility Test Admin are permitted to use this tool.</p>
+      <p class="header-credit">Created by Richiel Caña</p>
+    </div>
+    <nav>
+      <a href="#reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M4 19V5"></path>
+          <path d="M4 19h16"></path>
+          <path d="m7 15 3-4 3 2 5-6"></path>
+        </svg>
+        Reports
+      </a>
+      <a href="#notificationReport">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        Candidates Status
+      </a>
+      <a href="candidate.html" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        Candidate Login
+      </a>
+      <a href="#seatManager">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+          <path d="M8 8h8M8 12h8M8 16h4"></path>
+        </svg>
+        Seat Manager
+      </a>
+      <a href="https://sagilityassessment-cmyk.github.io/sagilityhiringfiles/home.html" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M4 5h16v14H4z"></path>
+          <path d="M8 9h8M8 13h5"></path>
+        </svg>
+        Sagility Files
+      </a>
+      <a href="assessment-instructions.html" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M6 3h9l3 3v15H6z"></path>
+          <path d="M9 11h6M9 15h6M9 7h3"></path>
+        </svg>
+        Assessment Instructions
+      </a>
+      <a href="notes.html" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M5 4h14v16H5z"></path>
+          <path d="M8 8h8M8 12h8M8 16h5"></path>
+        </svg>
+        Notes
+      </a>
+      <a id="typingTestLink" href="./typing-test/index.html" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+          <path d="M7 9h1M11 9h1M15 9h1M7 13h10"></path>
+        </svg>
+        Typing Test
+      </a>
+      <div class="location-control-wrap">
+        <div id="locationReminderBubble" class="typing-chart-hint location-reminder-bubble" role="status">Please note: choose your location</div>
+        <select class="header-location-select" id="headerLocationSelect" aria-label="Select location" autocomplete="off">
+          <option value="" disabled hidden selected>Location</option>
+          <option value="Iloilo City">Iloilo City</option>
+          <option value="Bohol">Bohol</option>
+          <option value="Alabang">Alabang</option>
+          <option value="Quezon City">Quezon City</option>
+          <option value="Testing">Testing</option>
+        </select>
+      </div>
+    </nav>
+    <button id="logoutBtn" class="logout-btn" type="button" aria-label="Log out">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M10 17l5-5-5-5"></path>
+        <path d="M15 12H3"></path>
+        <path d="M21 3v18"></path>
+      </svg>
+      Log out
+    </button>
+  </header>
+
+  <script>
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('sagility-assessment-state');
+      localStorage.removeItem('sagility-selected-location');
+      sessionStorage.clear();
+      window.location.replace('./index.html');
+    });
+  </script>
+
+  <!-- MAIN CONTENT GRID -->
+  <main class="grid">
+    <!-- LEFT SIDE: CANDIDATE INFORMATION -->
+    <section class="card candidate-info-card">
+      <div class="card-header">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <h2>Candidate Information</h2>
+      </div>
+      <div class="form-group">
+        <label class="form-label">
+          <svg class="form-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Name
+        </label>
+        <input id="candidateNameInput" type="text" placeholder="Name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">
+          <svg class="form-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+            <path d="m22 7-10 5L2 7"></path>
+          </svg>
+          Email
+        </label>
+        <input id="emailInput" type="email" placeholder="Email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">
+          <svg class="form-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          Location
+        </label>
+        <select id="locationInput">
+          <option value="" disabled selected hidden>Select Location</option>
+          <option>Iloilo City</option>
+          <option>Bohol</option>
+          <option>Alabang</option>
+          <option>Quezon City</option>
+          <option>Testing</option>
+        </select>
+        <button id="clearDataBtn" class="clear-data-btn" type="button">Clear Data</button>
+      </div>
+    </section>
+
+    <!-- RIGHT SIDE: SELECTED PACKAGES -->
+    <div class="right-column">
+      <!-- SELECTED PACKAGES CARD -->
+      <section class="card selected-packages-card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="14" height="10" rx="1"></rect>
+            <path d="M1 17h16"></path>
+            <rect x="18" y="3" width="5" height="12" rx="1"></rect>
+            <path d="M20 13h1"></path>
+          </svg>
+          <h2>Selected Package(s)</h2>
+        </div>
+        <div id="selectedPackagesContainer" class="selected-packages-scroll"></div>
+        <div class="email-action-row">
+          <div class="email-action-controls">
+            <label class="retake-option">
+              <input id="retakeCheckbox" type="checkbox">
+              Click here if Retake Assessment
+            </label>
+            <label class="retake-option">
+              <input id="followAssessmentCheckbox" type="checkbox">
+              Click here if Follow Assessment
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="card sent-history-card">
+        <div class="card-header">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"></circle>
+            <polyline points="12 7 12 12 15 14"></polyline>
+          </svg>
+          <h2>Preview Email</h2>
+        </div>
+        <div class="email-preview" aria-label="Email preview">
+          <div class="email-preview-heading">Candidate email preview</div>
+          <div id="emailPreviewSubject" class="email-preview-subject">Subject: Complete the fields and select a package</div>
+          <div id="emailPreviewBody" class="email-preview-body">The email preview will appear here.</div>
+        </div>
+        <div class="preview-email-action">
+          <p id="emailStatus" class="email-status" role="status" aria-live="polite"></p>
+          <button id="sendEmailBtn" class="send-email-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 6l2.29 2.29-4.29 4.29 4.29 4.29L16 18l-6-6 6-6z"></path>
+              <rect x="2" y="4" width="20" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Send Email
+          </button>
+        </div>
+        <input id="recentHistorySearchInput" type="hidden">
+        <ol id="recentSentHistoryList" hidden></ol>
+        <button id="deleteRecentHistoryBtn" type="button" hidden disabled>Delete</button>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FULL WIDTH ASSESSMENT PACKAGES -->
+  <section class="card assessment-packages-full">
+    <h2>Assessment Packages</h2>
+    <p class="packages-subtitle">Select one or more packages for assessment</p>
+    
+    <div class="categories-wrapper">
+      <div class="packages-column">
+      <!-- Level 1 -->
+      <div class="packages-category category-level1">
+        <h3 class="category-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m3 7 9-4 9 4-9 4-9-4Z"></path>
+            <path d="M3 7v10l9 4 9-4V7"></path>
+            <path d="M12 11v10"></path>
+          </svg>
+          Assessment Level 1
+        </h3>
+        <div class="packages-list" id="packagesList-level1">
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Workday Assessment Level 1" data-color="blue" data-url="https://journey.harver-us.com/vacancy/680a85c5678d2a49a06c94d3">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Workday Assessment Level 1</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Standalone Assessment Level 1" data-color="green" data-url="https://journey.harver-us.com/vacancy/67dc5093f62d0c4018a3e8e9">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Standalone Assessment Level 1</span>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- Level 3 Clinical -->
+      <div class="packages-category category-level3-clinical">
+        <h3 class="category-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m3 7 9-4 9 4-9 4-9-4Z"></path>
+            <path d="M3 7v10l9 4 9-4V7"></path>
+            <path d="M12 11v10"></path>
+          </svg>
+          Assessment Level 3 Clinical
+        </h3>
+        <div class="packages-list" id="packagesList-level3-clinical">
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Level 3: Clinical Assessment (Philippines)" data-color="yellow" data-url="https://journey.harver-us.com/vacancy/67e30e38fdb051af4a24761f">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Level 3: Clinical Assessment (Philippines)</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Level 3: Oncology Nurse Clinical Knowledge Test - PHP_RNC2" data-color="yellow" data-url="https://journey.harver-us.com/vacancy/67e86a60f2d06a81c622b875">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Level 3: Oncology Nurse Clinical Knowledge Test - PHP_RNC2</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Level 3: Labcorp OE Assessment- DATA ENTRY" data-color="yellow" data-url="https://journey.harver-us.com/vacancy/67e30c44fdb051af4a2475f6">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Level 3: Labcorp OE Assessment- DATA ENTRY</span>
+            </div>
+          </label>
+        </div>
+      </div>
+      </div>
+
+      <!-- Level 2 -->
+      <div class="packages-category category-level2">
+        <h3 class="category-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m3 7 9-4 9 4-9 4-9-4Z"></path>
+            <path d="M3 7v10l9 4 9-4V7"></path>
+            <path d="M12 11v10"></path>
+          </svg>
+          Assessment Level 2
+        </h3>
+        <div class="packages-list" id="packagesList-level2">
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Level 2 Spoken B2, English B1" data-color="blue" data-url="https://journey.harver-us.com/vacancy/680f51a8527167ce829a04dc">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Level 2 Spoken B2, English B1</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Level 2 Spoken B1, English B1" data-color="purple" data-url="https://journey.harver-us.com/vacancy/680fa6ba527167ce829a0660">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Level 2 Spoken B1, English B1</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Level 2 Spoken B2, English B1, Typing" data-color="green" data-url="https://journey.harver-us.com/vacancy/680f58fe527167ce829a04f3">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Level 2 Spoken B2, English B1, Typing</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Level 2 Spoken B2, English B2, Typing" data-color="blue" data-url="https://journey.harver-us.com/vacancy/680f7607527167ce829a05bf">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Level 2 Spoken B2, English B2, Typing</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Level 2 Spoken B2, English, Typing, RNT" data-color="purple" data-url="https://journey.harver-us.com/vacancy/680f74a0527167ce829a057a">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Level 2 Spoken B2, English, Typing, RNT</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="English, Typing, RNT" data-color="green" data-url="https://journey.harver-us.com/vacancy/680f7781527167ce829a0628">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">English, Typing, RNT</span>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- Standalone -->
+      <div class="packages-category category-standalone">
+        <h3 class="category-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m3 7 9-4 9 4-9 4-9-4Z"></path>
+            <path d="M3 7v10l9 4 9-4V7"></path>
+            <path d="M12 11v10"></path>
+          </svg>
+          Assessment Standalone
+        </h3>
+        <div class="packages-list" id="packagesList-standalone">
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Spoken Language Proficiency - B1/B2" data-color="purple" data-url="https://journey.harver-us.com/vacancy/67e314c6fdb051af4a247646">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Spoken Language Proficiency - B1/B2</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Spoken Language Proficiency - B2/C1" data-color="green" data-url="https://journey.harver-us.com/vacancy/67e6f0f3f2d06a81c622b793">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Spoken Language Proficiency - B2/C1</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="English Language Proficiency" data-color="blue" data-url="https://journey.harver-us.com/vacancy/67e85fd6f2d06a81c622b861">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">English Language Proficiency</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="PH - Standalone Typing Assessment" data-color="purple" data-url="https://journey.harver-us.com/vacancy/67e86c60f2d06a81c622b88e">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">PH - Standalone Typing Assessment</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Standalone Computer Proficiency Test" data-color="green" data-url="https://journey.harver-us.com/vacancy/67e9eb45f2d06a81c622b8a3">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Standalone Computer Proficiency Test</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Spanish" data-color="blue" data-url="https://journey.harver-us.com/vacancy/6a060301154605ed880b0d35">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Spanish</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="PHP AnatomyPhysio" data-color="purple" data-url="https://journey.harver-us.com/vacancy/67e73e7af2d06a81c622b807">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">PHP AnatomyPhysio</span>
+            </div>
+          </label>
+
+          <label class="package-item">
+            <input type="checkbox" class="package-checkbox" data-package="Registered Nurse Test (Philippines)" data-color="blue" data-url="https://journey.harver-us.com/vacancy/67e85ab1f2d06a81c622b834">
+            <div class="package-checkbox-visual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="package-info">
+              <span class="package-name">Registered Nurse Test (Philippines)</span>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sentEmailHistory" class="card sent-email-history-section">
+    <div class="card-header">
+      <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="9"></circle>
+        <polyline points="12 7 12 12 15 14"></polyline>
+      </svg>
+      <h2>History Data Sent Email</h2>
+    </div>
+    <div class="sent-email-history-toolbar">
+      <input id="historySearchInput" class="history-search-input" type="search" placeholder="Search name, email, or location">
+      <div class="history-export-range">
+        <label for="historyExportStart">From</label>
+        <input id="historyExportStart" type="date">
+        <label for="historyExportEnd">End</label>
+        <input id="historyExportEnd" type="date">
+        <button id="historyExportBtn" class="export-data-btn" type="button">Export CSV</button>
+        <p id="historyExportStatus" class="export-status" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="sent-email-history-scroll">
+      <table class="reports-table sent-email-history-table">
+        <thead>
+          <tr><th>#</th><th>Name</th><th>Email</th><th>Location</th><th>Date and Time</th><th>View</th><th>Resend</th><th>Delete</th></tr>
+        </thead>
+        <tbody id="sentEmailHistoryBody"></tbody>
+      </table>
+    </div>
+    <button id="deleteSelectedHistoryBtn" class="history-delete-selected" type="button" disabled>Delete</button>
+  </section>
+
+  <dialog id="packageViewDialog" class="package-view-dialog">
+    <form method="dialog">
+      <button class="package-view-close" aria-label="Close package list">&times;</button>
+    </form>
+    <h2>Packages Sent</h2>
+    <div id="packageViewList"></div>
+  </dialog>
+
+  <section id="reports" class="card reports-section">
+    <h2>Reports</h2>
+    <p class="packages-subtitle">All recorded assessments by location</p>
+    <div class="reports-content">
+      <table class="reports-table">
+        <thead>
+          <tr><th>Location</th><th>Count</th></tr>
+        </thead>
+        <tbody id="reportTableBody">
+          <tr><td>Quezon City</td><td id="reportCount-quezon-city">0</td></tr>
+          <tr><td>Iloilo City</td><td id="reportCount-iloilo-city">0</td></tr>
+          <tr><td>Alabang</td><td id="reportCount-alabang">0</td></tr>
+          <tr><td>Bohol</td><td id="reportCount-bohol">0</td></tr>
+        </tbody>
+      </table>
+      <div id="reportChart" class="report-chart" aria-label="Assessment count by location"></div>
+    </div>
+    <div class="reports-total">Total unique emails: <strong id="reportTotalCount">0</strong></div>
+    <div class="export-controls">
+      <label for="exportDateInput">From</label>
+      <input id="exportDateInput" type="date">
+      <label for="exportEndInput">End</label>
+      <input id="exportEndInput" type="date">
+      <button id="exportDataBtn" class="export-data-btn" type="button">Export CSV</button>
+      <p id="exportStatus" class="export-status" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section id="typingResults" class="card reports-section typing-results-section">
+    <h2>Typing Test Results</h2>
+    <p class="packages-subtitle">Completed typing tests, including retakes, synced across browsers</p>
+    <div class="typing-results-filters">
+      <input id="typingResultsNameFilter" type="search" placeholder="Filter by name" aria-label="Filter typing results by name">
+      <input id="typingResultsSeatFilter" type="search" placeholder="Filter by seat number" aria-label="Filter typing results by seat number">
+      <select id="typingResultsLocationFilter" aria-label="Filter typing results by location">
+        <option value="">All locations</option>
+        <option value="Iloilo City">Iloilo City</option>
+        <option value="Quezon City">Quezon City</option>
+        <option value="Alabang">Alabang</option>
+        <option value="Bohol">Bohol</option>
+      </select>
+    </div>
+    <div class="typing-results-table-wrap">
+      <table class="reports-table typing-results-table">
+        <thead>
+          <tr>
+            <th>No.</th><th>Name</th><th>Location</th><th>Seat number</th><th>Date and Time</th><th>Time Finished</th><th>Score (WPM)</th><th>Accuracy</th><th>Delete</th>
+          </tr>
+        </thead>
+        <tbody id="typingResultsBody">
+          <tr><td colspan="9">Loading typing test results...</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <button id="deleteTypingResultsBtn" class="history-delete-selected" type="button" disabled>Delete</button>
+    <div class="typing-chart-toggle-wrap">
+      <div id="typingChartHint" class="typing-chart-hint" role="status">Click to show report graph</div>
+      <button id="toggleTypingResultsChartBtn" class="typing-chart-toggle" type="button" aria-expanded="false" aria-controls="typingResultsChart">Show graph</button>
+    </div>
+    <div id="typingResultsChart" class="typing-results-chart is-collapsed" aria-label="Typing test results by WPM range and location"></div>
+  </section>
+
+  <section id="weeklyReport" class="card reports-section weekly-report-section">
+    <div class="weekly-report-heading">
+      <div>
+        <h2>Monthly Assessment Count</h2>
+        <p class="packages-subtitle">Assessment count for days 1-15 and 16 through month end</p>
+      </div>
+      <label class="weekly-report-month">
+        Month
+        <input id="weeklyReportMonthInput" type="month">
+      </label>
+    </div>
+    <div id="weeklyReportChart" class="weekly-report-chart" aria-label="Weekly assessment count line graph"></div>
+  </section>
+
+  <section id="notificationReport" class="card reports-section notification-report-section">
+    <div class="notification-report-heading">
+      <div>
+        <h2>Candidates Report Status</h2>
+        <p class="packages-subtitle">All recorded candidate statuses by location</p>
+      </div>
+      <div class="notification-report-actions">
+      </div>
+    </div>
+    <div class="notification-report-overview">
+      <table class="reports-table notification-summary-table">
+        <thead>
+          <tr><th>Location</th><th>Count</th><th>No Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Quezon City</td><td id="notificationCount-quezon-city">0</td><td id="notificationNoStatus-quezon-city">0</td></tr>
+          <tr><td>Iloilo City</td><td id="notificationCount-iloilo-city">0</td><td id="notificationNoStatus-iloilo-city">0</td></tr>
+          <tr><td>Alabang</td><td id="notificationCount-alabang">0</td><td id="notificationNoStatus-alabang">0</td></tr>
+          <tr><td>Bohol</td><td id="notificationCount-bohol">0</td><td id="notificationNoStatus-bohol">0</td></tr>
+        </tbody>
+      </table>
+      <div id="notificationStatusChart" class="notification-status-chart" aria-label="Notification count and no status chart"></div>
+    </div>
+    <div class="notification-search-controls notification-details-search-controls">
+      <label class="notification-search-field">
+        <input id="notificationSearchInput" type="search" placeholder="Filter Data" aria-label="Filter notification report">
+      </label>
+      <button id="notificationSearchBtn" class="notification-search-button" type="button">Search</button>
+    </div>
+    <div class="notification-details-scroll">
+      <table class="reports-table notification-details-table">
+        <thead>
+          <tr><th>#</th><th>Name</th><th>Email</th><th>Location</th><th>Date and Time</th><th>Status</th><th>Delete</th></tr>
+        </thead>
+        <tbody id="notificationDetailsBody"></tbody>
+      </table>
+    </div>
+    <div class="notification-export-row">
+      <div class="export-controls notification-export-controls">
+        <label for="notificationExportDateInput">From</label>
+        <input id="notificationExportDateInput" type="date">
+        <label for="notificationExportEndInput">End</label>
+        <input id="notificationExportEndInput" type="date">
+        <button id="notificationExportDataBtn" class="export-data-btn" type="button">Export CSV</button>
+        <p id="notificationExportStatus" class="export-status" role="status" aria-live="polite"></p>
+      </div>
+      <div class="notification-delete-controls">
+        <button id="deleteSelectedNotificationsBtn" class="history-delete-selected" type="button" disabled>Delete</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASSESSMENT SEAT MANAGER -->
+  <section id="seatManager" class="card seat-manager-card">
+    <div class="card-header">
+      <h2>Assessment Seat Manager</h2>
+    </div>
+    <div class="seat-grid">
+      <div class="seat-card"><h3>Seat 1</h3><input type="text" inputmode="text" aria-label="Seat 1 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 2</h3><input type="text" inputmode="text" aria-label="Seat 2 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 3</h3><input type="text" inputmode="text" aria-label="Seat 3 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 4</h3><input type="text" inputmode="text" aria-label="Seat 4 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 5</h3><input type="text" inputmode="text" aria-label="Seat 5 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 6</h3><input type="text" inputmode="text" aria-label="Seat 6 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 7</h3><input type="text" inputmode="text" aria-label="Seat 7 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 8</h3><input type="text" inputmode="text" aria-label="Seat 8 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 9</h3><input type="text" inputmode="text" aria-label="Seat 9 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 10</h3><input type="text" inputmode="text" aria-label="Seat 10 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 11</h3><input type="text" inputmode="text" aria-label="Seat 11 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 12</h3><input type="text" inputmode="text" aria-label="Seat 12 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 13</h3><input type="text" inputmode="text" aria-label="Seat 13 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 14</h3><input type="text" inputmode="text" aria-label="Seat 14 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 15</h3><input type="text" inputmode="text" aria-label="Seat 15 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 16</h3><input type="text" inputmode="text" aria-label="Seat 16 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 17</h3><input type="text" inputmode="text" aria-label="Seat 17 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 18</h3><input type="text" inputmode="text" aria-label="Seat 18 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 19</h3><input type="text" inputmode="text" aria-label="Seat 19 value"><button class="seat-call-button" type="button">CALL</button></div>
+      <div class="seat-card"><h3>Seat 20</h3><input type="text" inputmode="text" aria-label="Seat 20 value"><button class="seat-call-button" type="button">CALL</button></div>
+    </div>
+    <div class="seat-manager-actions">
+      <button class="seat-manager-action clear-data-action" type="button">Clear Data</button>
+      <button class="seat-manager-action view-display-action" type="button">View Display</button>
+    </div>
+  </section>
+
+  <section id="monthlyReports" class="card monthly-reports-section">
+    <div class="monthly-reports-heading">
+      <div>
+        <h2>Monthly Reports</h2>
+        <p class="packages-subtitle">Saved report snapshots</p>
+      </div>
+    </div>
+    <div class="monthly-reports-grid">
+      <a class="monthly-report-card" href="MOTHLY%20REPORT.png" target="_blank" rel="noopener">
+        <img src="MOTHLY%20REPORT.png" alt="Monthly report">
+        <strong>Monthly Report</strong>
+      </a>
+      <a class="monthly-report-card" href="MONTHLY%20TABLE%20DASHBOARD.png" target="_blank" rel="noopener">
+        <img src="MONTHLY%20TABLE%20DASHBOARD.png" alt="Monthly table dashboard">
+        <strong>Monthly Table Dashboard</strong>
+      </a>
+    </div>
+  </section>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script>
+    const headerLocationSelect = document.getElementById('headerLocationSelect');
+    const locationInput = document.getElementById('locationInput');
+    const LOCATION_STORAGE_KEY = 'sagility-selected-location';
+    const locationReminderBubble = document.getElementById('locationReminderBubble');
+    const savedLocation = localStorage.getItem(LOCATION_STORAGE_KEY) || '';
+    headerLocationSelect.value = savedLocation;
+    locationInput.value = savedLocation;
+
+    window.setTimeout(() => locationReminderBubble.classList.add('is-visible'), 350);
+    window.setTimeout(() => locationReminderBubble.classList.remove('is-visible'), 5000);
+
+    headerLocationSelect.addEventListener('change', () => {
+      locationReminderBubble.classList.remove('is-visible');
+      localStorage.setItem(LOCATION_STORAGE_KEY, headerLocationSelect.value);
+      locationInput.value = headerLocationSelect.value;
+      updateTypingTestLink();
+      updateSelectedPackages();
+      renderEmailPreview();
+      locationInput.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    locationInput.addEventListener('change', () => {
+      headerLocationSelect.value = locationInput.value;
+      if (locationInput.value) {
+        localStorage.setItem(LOCATION_STORAGE_KEY, locationInput.value);
+      }
+      updateTypingTestLink();
+    });
+
+    function updateTypingTestLink() {
+      const typingTestLink = document.getElementById('typingTestLink');
+      if (!typingTestLink) return;
+      const location = headerLocationSelect.value;
+      typingTestLink.href = location
+        ? `./typing-test/index.html?location=${encodeURIComponent(location)}`
+        : './typing-test/index.html';
+    }
+    updateTypingTestLink();
+
+    // Paste your deployed Google Apps Script Web app URL here.
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBgHVtTwGcI5Wk2261KJicHaYYqcENG3QzYJCnjnIHr9HHilIkMzo28zK3qruMlvZQxQ/exec';
+    const firebaseConfig = {
+      apiKey: 'AIzaSyBZVAXmgE-24AVUFB_7xS4GQi4OwkIvptQ',
+      authDomain: 'sagility-assessment.firebaseapp.com',
+      projectId: 'sagility-assessment',
+      storageBucket: 'sagility-assessment.firebasestorage.app',
+      messagingSenderId: '879192858532',
+      appId: '1:879192858532:web:39e190eb2b130998df6b31',
+      measurementId: 'G-QHND2XY4ZR'
+    };
+
+    const portalLoginApp = firebase.initializeApp(firebaseConfig, 'portal-login');
+    const portalAuth = portalLoginApp.auth();
+    const portalSessionKey = 'assessment-portal-authenticated';
+    const portalSessionStartedKey = 'assessment-portal-session-started';
+    const portalSessionDuration = 5 * 60 * 60 * 1000;
+    const portalLoginView = document.getElementById('portalLoginView');
+    const portalLoginForm = document.getElementById('portalLoginForm');
+    const portalLoginMessage = document.getElementById('portalLoginMessage');
+    const portalLoginButton = portalLoginForm.querySelector('.portal-login-submit');
+
+    function unlockAssessmentPortal() {
+      document.body.classList.remove('portal-locked');
+      document.documentElement.classList.remove('portal-login-locked');
+      portalLoginView.remove();
+    }
+
+    const portalSessionStarted = Number(sessionStorage.getItem(portalSessionStartedKey));
+    if (sessionStorage.getItem(portalSessionKey) === 'true'
+      && Number.isFinite(portalSessionStarted)
+      && Date.now() - portalSessionStarted < portalSessionDuration) {
+      unlockAssessmentPortal();
+    } else {
+      sessionStorage.removeItem(portalSessionKey);
+      sessionStorage.removeItem(portalSessionStartedKey);
+      document.documentElement.classList.add('portal-login-locked');
+    }
+
+    document.getElementById('portalResetPassword').addEventListener('click', async () => {
+      const email = document.getElementById('portalLoginEmail').value.trim().toLowerCase();
+      if (!email) {
+        portalLoginMessage.textContent = 'Enter your company email first.';
+        return;
+      }
+      try {
+        await portalAuth.sendPasswordResetEmail(email);
+        portalLoginMessage.className = 'is-success';
+        portalLoginMessage.textContent = 'Password reset email sent. Check your inbox.';
+      } catch {
+        portalLoginMessage.className = '';
+        portalLoginMessage.textContent = 'Unable to send the reset email. Check the email address.';
+      }
+    });
+
+    portalLoginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const email = document.getElementById('portalLoginEmail').value.trim().toLowerCase();
+      const password = document.getElementById('portalLoginPassword').value;
+      portalLoginMessage.textContent = '';
+      portalLoginButton.disabled = true;
+      portalLoginButton.firstChild.textContent = 'Signing in... ';
+      try {
+        await portalAuth.signInWithEmailAndPassword(email, password);
+        sessionStorage.setItem(portalSessionKey, 'true');
+        sessionStorage.setItem(portalSessionStartedKey, String(Date.now()));
+        unlockAssessmentPortal();
+      } catch {
+        portalLoginMessage.textContent = 'Incorrect email or password.';
+        portalLoginButton.disabled = false;
+        portalLoginButton.firstChild.textContent = 'Log in ';
+      }
+    });
+
+    firebase.initializeApp(firebaseConfig);
+    const firestore = firebase.firestore();
+    const firebaseAuthReady = firebase.auth().signInAnonymously();
+
+    async function ensureFirebaseAuth() {
+      try {
+        await firebaseAuthReady;
+      } catch {
+      }
+      if (!firebase.auth().currentUser) {
+        await firebase.auth().signInAnonymously();
+      }
+      await firebase.auth().currentUser.getIdToken(true);
+    }
+
+    const LOCAL_STORAGE_KEY = 'sagility-assessment-state';
+    const HISTORY_DELETE_KEY = 'sagility-assessment-hidden-history';
+    const chimeAudio = new Audio('chime.mp3');
+    chimeAudio.preload = 'auto';
+    let notificationAudioUnlocked = false;
+    const notificationQueue = [];
+    const observedAudioNotificationIds = new Set();
+    let isNotificationQueueRunning = false;
+    let emailStatusPopupTimer;
+    let sentHistoryRecords = [];
+    let previousRecordIds = new Set();
+    let hasLoadedHistory = false;
+
+    function playChime() {
+      chimeAudio.pause();
+      chimeAudio.currentTime = 0;
+
+      return new Promise(resolve => {
+        const finish = () => {
+          chimeAudio.removeEventListener('ended', finish);
+          resolve();
+        };
+
+        chimeAudio.addEventListener('ended', finish, { once: true });
+        chimeAudio.play().catch(error => {
+          chimeAudio.removeEventListener('ended', finish);
+          console.warn('Chime playback was blocked:', error);
+          resolve();
+        });
+      });
+    }
+
+    function showEmailStatusPopup(message, state) {
+      const popup = document.getElementById('emailStatusPopup');
+      document.getElementById('emailStatusPopupMessage').textContent = message;
+      popup.className = `email-status-popup ${state}`;
+      window.clearTimeout(emailStatusPopupTimer);
+      emailStatusPopupTimer = window.setTimeout(() => {
+        popup.classList.add('hidden');
+      }, 10000);
+    }
+
+    document.getElementById('closeEmailStatusPopup').addEventListener('click', () => {
+      window.clearTimeout(emailStatusPopupTimer);
+      document.getElementById('emailStatusPopup').classList.add('hidden');
+    });
+
+    function unlockNotificationAudio() {
+      if (notificationAudioUnlocked) {
+        return;
+      }
+
+      chimeAudio.muted = true;
+      chimeAudio.play()
+        .then(() => {
+          chimeAudio.pause();
+          chimeAudio.currentTime = 0;
+          chimeAudio.muted = false;
+          notificationAudioUnlocked = true;
+        })
+        .catch(() => {
+          chimeAudio.muted = false;
+        });
+    }
+
+    document.addEventListener('pointerdown', unlockNotificationAudio, { once: true });
+    document.addEventListener('keydown', unlockNotificationAudio, { once: true });
+
+    function speakNextNotification() {
+      if (notificationQueue.length === 0) {
+        isNotificationQueueRunning = false;
+        return;
+      }
+
+      const message = notificationQueue.shift();
+      if (!('speechSynthesis' in window)) {
+        speakNextNotification();
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(message);
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+      utterance.onend = speakNextNotification;
+      utterance.onerror = speakNextNotification;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function queueNotification(message, location) {
+      if (!headerLocationSelect.value || headerLocationSelect.value !== location) {
+        return;
+      }
+
+      notificationQueue.push(message);
+
+      if (isNotificationQueueRunning) {
+        return;
+      }
+
+      isNotificationQueueRunning = true;
+      playChime().then(speakNextNotification);
+    }
+
+    function triggerAssessmentNotification(firstName, location) {
+      queueNotification(`Done Assessment ${firstName} from ${location}`, location);
+    }
+
+    function initializeAssessmentAudioNotifications() {
+      ensureFirebaseAuth()
+        .then(() => {
+          let hasLoadedAudioNotifications = false;
+
+          firestore.collection('notificationHistory')
+            .where('expiresAt', '>', Date.now())
+            .orderBy('expiresAt', 'asc')
+            .onSnapshot(snapshot => {
+              if (!hasLoadedAudioNotifications) {
+                hasLoadedAudioNotifications = true;
+                snapshot.docs.forEach(notificationDocument => {
+                  if (notificationDocument.data().source === 'assessment-audio') {
+                    observedAudioNotificationIds.add(notificationDocument.id);
+                  }
+                });
+                return;
+              }
+
+              snapshot.docChanges()
+                .filter(change => change.type === 'added')
+                .forEach(change => {
+                  if (observedAudioNotificationIds.has(change.doc.id)) {
+                    return;
+                  }
+                  observedAudioNotificationIds.add(change.doc.id);
+                  const notification = change.doc.data();
+                  if (notification.source !== 'assessment-audio') {
+                    return;
+                  }
+                  if (Number(notification.expiresAt) <= Date.now()) {
+                    return;
+                  }
+                  queueNotification(
+                    `${notification.action} ${notification.seat}`,
+                    notification.location
+                  );
+                });
+            }, error => {
+              console.error('Assessment audio notifications unavailable:', error);
+            });
+        })
+        .catch(error => {
+          console.error('Assessment audio authentication failed:', error);
+        });
+    }
+
+    let notificationRecords = [];
+    const pendingNotificationStatuses = new Map();
+
+    function getPersistedState() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '{}');
+        return {
+          sentHistory: Array.isArray(stored.sentHistory) ? stored.sentHistory : [],
+          selectedPackages: Array.isArray(stored.selectedPackages) ? stored.selectedPackages : []
+        };
+      } catch (error) {
+        return { sentHistory: [], selectedPackages: [] };
+      }
+    }
+
+    function getHiddenHistoryKeys() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(HISTORY_DELETE_KEY) || '[]');
+        return Array.isArray(stored) ? stored : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function recordSignature(record) {
+      const parts = [
+        record.name || '',
+        record.email || '',
+        record.location || '',
+        record.dateKey || '',
+        record.timestamp || '',
+        record.date || ''
+      ];
+      return parts.join('|');
+    }
+
+    function isHiddenHistoryRecord(record) {
+      return getHiddenHistoryKeys().includes(recordSignature(record));
+    }
+
+    function isDeletedHistoryRecord(record) {
+      return Boolean(record.deleted === true || record.isDeleted === true);
+    }
+
+    function persistState() {
+      const selectedPackages = getOrderedSelectedPackageCheckboxes().map(checkbox => ({
+        package: checkbox.dataset.package,
+        url: checkbox.dataset.url
+      }));
+
+      const state = {
+        selectedPackages
+      };
+
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function persistHiddenHistoryKeys(keys) {
+      localStorage.setItem(HISTORY_DELETE_KEY, JSON.stringify(keys));
+    }
+
+    function restoreState() {
+      const savedState = getPersistedState();
+      document.querySelectorAll('.package-checkbox').forEach(checkbox => {
+        const saved = savedState.selectedPackages.find(item => item.package === checkbox.dataset.package);
+        checkbox.checked = Boolean(saved);
+        updatePackageItemUI(checkbox);
+      });
+
+      updateSelectedPackages();
+      renderEmailPreview();
+      renderSentHistory(document.getElementById('historySearchInput')?.value || '');
+      renderRecentSentHistory(document.getElementById('recentHistorySearchInput')?.value || '');
+      renderReports();
+    }
+
+    function getManilaDateKey(date = new Date()) {
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Manila',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).formatToParts(date).reduce((values, part) => {
+        values[part.type] = part.value;
+        return values;
+      }, {});
+      return `${parts.year}-${parts.month}-${parts.day}`;
+    }
+
+    function getRecordDateKey(item) {
+      if (typeof item.dateKey === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(item.dateKey)) {
+        return item.dateKey;
+      }
+      if (typeof item.timestamp === 'number') return getManilaDateKey(new Date(item.timestamp));
+      if (item.timestamp && typeof item.timestamp.toDate === 'function') {
+        return getManilaDateKey(item.timestamp.toDate());
+      }
+      if (item.date) {
+        const parsedDate = new Date(item.date);
+        if (!Number.isNaN(parsedDate.getTime())) return getManilaDateKey(parsedDate);
+      }
+      return '';
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[character]));
+    }
+
+    function normalizeLocation(location) {
+      const cleanLocation = String(location || '').trim();
+      const normalized = cleanLocation.toLowerCase();
+      const locationNames = {
+        'quezon city': 'Quezon City',
+        'qc': 'Quezon City',
+        'iloilo': 'Iloilo City',
+        'iloilo city': 'Iloilo City',
+        'alabang': 'Alabang',
+        'bohol': 'Bohol'
+      };
+      return locationNames[normalized] || cleanLocation;
+    }
+
+    /* ================================================================
+       EDIT PACKAGE NAMES AND LINKS HERE
+       Update only the name or url values below. The cards and email
+       links will use these values automatically.
+    ================================================================= */
+    const packageCatalog = {
+      level1: [
+        { name: 'Level 1: Workday (Personality, SJT, Logical, Computer)', url: 'https://journey.harver-us.com/vacancy/680a85c5678d2a49a06c94d3' },
+        { name: 'Level 1: Standalone (Personality, SJT, Logical)', url: 'https://journey.harver-us.com/vacancy/67dc5093f62d0c4018a3e8e9' }
+      ],
+      'level3-clinical': [
+        { name: 'Level 3: Clinical Acumen', url: 'https://journey.harver-us.com/vacancy/67e30e38fdb051af4a24761f' },
+        { name: 'Level 3: Oncology', url: 'https://journey.harver-us.com/vacancy/67e86a60f2d06a81c622b875' },
+        { name: 'Level 3: Data Entry', url: 'https://journey.harver-us.com/vacancy/67e30c44fdb051af4a2475f6' },
+        { name: 'Level 3: Anatomy', url: 'https://journey.harver-us.com/vacancy/67e73e7af2d06a81c622b807' },
+        { name: 'Level 3: Registered Nurse Test', url: 'https://journey.harver-us.com/vacancy/67e85ab1f2d06a81c622b834' }
+      ],
+      level2: [
+        { name: 'Level 2: Spoken B2, English B1', url: 'https://journey.harver-us.com/vacancy/680f51a8527167ce829a04dc' },
+        { name: 'Level 2: Spoken B1, English B1', url: 'https://journey.harver-us.com/vacancy/680fa6ba527167ce829a0660' },
+        { name: 'Level 2: Spoken B2, English B1, Typing', url: 'https://journey.harver-us.com/vacancy/680f58fe527167ce829a04f3' },
+        { name: 'Level 2: Spoken B2, English B2, Typing', url: 'https://journey.harver-us.com/vacancy/680f7607527167ce829a05bf' },
+        { name: 'Level 2: Spoken B2, English, Typing, RNT', url: 'https://journey.harver-us.com/vacancy/680f74a0527167ce829a057a' },
+        { name: 'Level 2: English, Typing, RNT', url: 'https://journey.harver-us.com/vacancy/680f7781527167ce829a0628' },
+        { name: 'Level 2: Spoken, English, Computer,Typing', url: 'https://journey.harver-us.com/vacancy/680f5e77527167ce829a053b' },
+        { name: 'Level 2: Spoken, English, Computer', url: 'https://journey.harver-us.com/vacancy/680f5a39527167ce829a050b' }
+      ],
+      standalone: [
+        { name: 'Spoken Language Proficiency - B1/B2', url: 'https://journey.harver-us.com/vacancy/67e314c6fdb051af4a247646' },
+        { name: 'Spoken Language Proficiency - B2/C1', url: 'https://journey.harver-us.com/vacancy/67e6f0f3f2d06a81c622b793' },
+        { name: 'English Language Proficiency', url: 'https://journey.harver-us.com/vacancy/67e85fd6f2d06a81c622b861' },
+        { name: 'Typing Assessment', url: 'https://journey.harver-us.com/vacancy/67e86c60f2d06a81c622b88e' },
+        { name: 'Basic Computer Proficiency Test', url: 'https://journey.harver-us.com/vacancy/67e9eb45f2d06a81c622b8a3' },
+        { name: 'Spanish Bilingual', url: 'https://journey.harver-us.com/vacancy/6a060301154605ed880b0d35' }
+      ],
+    };
+
+    function createPackageItem() {
+      const packageItem = document.createElement('label');
+      packageItem.className = 'package-item';
+      packageItem.innerHTML = `
+        <input type="checkbox" class="package-checkbox">
+        <div class="package-checkbox-visual">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <div class="package-info">
+          <span class="package-name"></span>
+        </div>
+      `;
+      return packageItem;
+    }
+
+    function applyPackageCatalog() {
+      const colorByCategory = {
+        level1: 'blue',
+        'level3-clinical': 'yellow',
+        level2: 'green',
+        standalone: 'purple'
+      };
+
+      Object.entries(packageCatalog).forEach(([category, packages]) => {
+        const list = document.getElementById(`packagesList-${category}`);
+        list.innerHTML = '';
+        packages.forEach((packageDetails, index) => {
+          list.appendChild(createPackageItem());
+          const checkbox = list.querySelectorAll('.package-checkbox')[index];
+
+          checkbox.dataset.package = packageDetails.name;
+          checkbox.dataset.color = colorByCategory[category] || 'blue';
+          checkbox.dataset.url = packageDetails.url;
+          const packageName = checkbox.closest('.package-item').querySelector('.package-name');
+          packageName.textContent = packageDetails.name;
+        });
+      });
+    }
+
+    applyPackageCatalog();
+
+    // Initialize selected packages on page load
+    function initializeSelectedPackages() {
+      updateSelectedPackages();
+    }
+
+    function getOrderedSelectedPackageCheckboxes() {
+      const categoryOrder = {
+        'packagesList-level1': 1,
+        'packagesList-level2': 2,
+        'packagesList-level3-clinical': 3,
+        'packagesList-standalone': 4
+      };
+
+      return [...document.querySelectorAll('.package-checkbox:checked')].sort((first, second) => {
+        const firstListId = first.closest('.packages-list').id;
+        const secondListId = second.closest('.packages-list').id;
+        return categoryOrder[firstListId] - categoryOrder[secondListId];
+      });
+    }
+
+    // Update selected packages display
+    function updateSelectedPackages() {
+      const checkboxes = getOrderedSelectedPackageCheckboxes();
+      const container = document.getElementById('selectedPackagesContainer');
+      container.innerHTML = '';
+
+      checkboxes.forEach(checkbox => {
+        const packageName = checkbox.dataset.package;
+        const listId = checkbox.closest('.packages-list').id;
+        const colorByCategory = {
+          'packagesList-level1': 'blue',
+          'packagesList-level3-clinical': 'yellow',
+          'packagesList-level2': 'green',
+          'packagesList-standalone': 'purple'
+        };
+        const color = colorByCategory[listId] || 'blue';
+        const url = checkbox.dataset.url;
+        const pkg = document.createElement('div');
+        pkg.className = `pkg ${color}`;
+        pkg.innerHTML = `
+          <div class="pkg-name">
+            <span class="pkg-check" aria-hidden="true">✓</span>
+            <a href="${url}" target="_blank" rel="noopener noreferrer" class="pkg-link">${packageName}</a>
+          </div>
+          <button class="pkg-remove" data-package="${packageName}" type="button">✕</button>
+        `;
+        container.appendChild(pkg);
+
+        // Add remove button functionality
+        pkg.querySelector('.pkg-remove').addEventListener('click', (e) => {
+          e.preventDefault();
+          checkbox.checked = false;
+          updateSelectedPackages();
+          renderEmailPreview();
+          updatePackageItemUI(checkbox);
+          persistState();
+        });
+      });
+
+      // Show empty state if no packages selected
+      if (checkboxes.length === 0) {
+        container.innerHTML = '<p class="no-packages">No packages selected</p>';
+      }
+    }
+
+    function getVisibleHistoryRecords() {
+      return sentHistoryRecords.filter(item => !String(item.source || '').startsWith('candidate-notification') && !isHiddenHistoryRecord(item) && !isDeletedHistoryRecord(item));
+    }
+
+    function getVisibleNotificationRecords() {
+      return sentHistoryRecords.filter(item => String(item.source || '').startsWith('candidate-notification') && !item.deleted);
+    }
+
+    function getLatestNotificationRecords() {
+      return getVisibleNotificationRecords()
+        .sort((first, second) => Number(second.timestamp || 0) - Number(first.timestamp || 0));
+    }
+
+    function getWeeklyReportMonth() {
+      const input = document.getElementById('weeklyReportMonthInput');
+      if (input?.value) return input.value;
+      return getManilaDateKey().slice(0, 7);
+    }
+
+    function getMonthlyAssessmentData(monthValue) {
+      const [year, month] = monthValue.split('-').map(Number);
+      const daysInMonth = new Date(year, month, 0).getDate();
+      const emailByDate = new Map();
+      const emailByDateAndLocation = new Map();
+      const locationNames = ['Quezon City', 'Iloilo City', 'Bohol', 'Alabang'];
+
+      getVisibleHistoryRecords().forEach(item => {
+        const dateKey = getRecordDateKey(item);
+        if (!dateKey.startsWith(monthValue)) return;
+        const email = String(item.email || '').trim().toLowerCase();
+        if (!email) return;
+        
+        // Track total count
+        if (!emailByDate.has(dateKey)) emailByDate.set(dateKey, new Set());
+        emailByDate.get(dateKey).add(email);
+        
+        // Track count by location - find matching location name
+        const itemLocation = String(item.location || '').trim();
+        const matchedLocation = locationNames.find(loc => normalizeLocation(loc) === normalizeLocation(itemLocation));
+        
+        if (matchedLocation) {
+          const locationKey = `${dateKey}|${matchedLocation}`;
+          if (!emailByDateAndLocation.has(locationKey)) emailByDateAndLocation.set(locationKey, new Set());
+          emailByDateAndLocation.get(locationKey).add(email);
+        }
+      });
+
+      const days = [];
+      for (let day = 1; day <= daysInMonth; day += 1) {
+        const date = new Date(year, month - 1, day);
+        const dateKey = `${monthValue}-${String(day).padStart(2, '0')}`;
+        const dayLabels = ['Sun', 'M', 'T', 'W', 'Th', 'F', 'Sat'];
+        
+        const dayData = {
+          dayNumber: day,
+          dayLabel: dayLabels[date.getDay()],
+          count: emailByDate.get(dateKey)?.size || 0,
+          locations: {
+            'Quezon City': emailByDateAndLocation.get(`${dateKey}|Quezon City`)?.size || 0,
+            'Iloilo City': emailByDateAndLocation.get(`${dateKey}|Iloilo City`)?.size || 0,
+            'Bohol': emailByDateAndLocation.get(`${dateKey}|Bohol`)?.size || 0,
+            'Alabang': emailByDateAndLocation.get(`${dateKey}|Alabang`)?.size || 0
+          }
+        };
+        days.push(dayData);
+      }
+      return { days, firstHalf: days.slice(0, 15), secondHalf: days.slice(15) };
+    }
+
+    function renderWeeklyAssessmentChart() {
+      const chart = document.getElementById('weeklyReportChart');
+      if (!chart) return;
+      const monthValue = getWeeklyReportMonth();
+      const [year, month] = monthValue.split('-').map(Number);
+      const monthLabel = new Date(year, month - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      const monthlyData = getMonthlyAssessmentData(monthValue);
+      const { days, firstHalf, secondHalf } = monthlyData;
+
+      if (!days.length) {
+        chart.innerHTML = `<p class="report-empty">No assessment data for ${escapeHtml(monthLabel)}</p>`;
+        return;
+      }
+
+      const width = 1400;
+      const height = 220;
+      const sideGap = width * 0.05;
+      const left = sideGap;
+      const right = sideGap;
+      const top = 20;
+      const bottom = 52;
+      const plotWidth = width - left - right;
+      const plotHeight = height - top - bottom;
+      const maxCount = Math.max(...days.map(day => day.count), 1);
+      const xStep = days.length > 1 ? plotWidth / (days.length - 1) : plotWidth;
+      
+      const points = days.map((day, index) => ({
+          ...day,
+          x: left + index * xStep,
+          y: top + plotHeight - (day.count / maxCount) * plotHeight
+        }));
+      
+      // Location line colors
+      const locationColors = {
+        'Quezon City': '#4d7cff',
+        'Iloilo City': '#8be0a8',
+        'Bohol': '#ffe27a',
+        'Alabang': '#8b5cf6'
+      };
+      
+      const gridLines = [0, 0.5, 1].map(ratio => {
+        const y = top + plotHeight - ratio * plotHeight;
+        const value = Math.round(maxCount * ratio);
+        return `<line x1="${left}" y1="${y}" x2="${width - right}" y2="${y}" class="weekly-grid-line"></line><text x="${left - 8}" y="${y + 4}" class="weekly-axis-label" text-anchor="end">${value}</text>`;
+      }).join('');
+      
+      const labels = points.map(point => `<text x="${point.x}" y="${height - 24}" class="weekly-day-label" text-anchor="middle">${point.dayLabel} ${point.dayNumber}</text>`).join('');
+      const firstPoints = points.slice(0, firstHalf.length).map(point => `${point.x},${point.y}`).join(' ');
+      const secondPoints = points.slice(firstHalf.length).map(point => `${point.x},${point.y}`).join(' ');
+      
+      // Generate location-specific polylines (ALL locations, always)
+      let locationLines = '';
+      Object.keys(locationColors).forEach(location => {
+        const locationPoints = days.map((day, index) => {
+          const locationCount = day.locations[location];
+          const yPos = top + plotHeight - (locationCount / maxCount) * plotHeight;
+          return { x: left + index * xStep, y: yPos };
+        });
+        const locationPointsStr = locationPoints.map(p => `${p.x},${p.y}`).join(' ');
+        locationLines += `<polyline points="${locationPointsStr}" fill="none" stroke="${locationColors[location]}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="location-line"></polyline>`;
+      });
+      
+      const dots = points.map((point, index) => {
+        const color = index < firstHalf.length ? '#333' : '#999';
+        return `<circle cx="${point.x}" cy="${point.y}" r="4" fill="#ffffff" stroke="${color}" stroke-width="3" class="weekly-point ${index < firstHalf.length ? 'half-first' : 'half-second'}"><title>${point.dayLabel} ${point.dayNumber}: ${point.count}</title></circle>`;
+      }).join('');
+      
+      const legend = `<div class="weekly-legend">
+        <span><i class="weekly-legend-swatch half-first"></i>Overall Count</span>
+        <span style="margin-left: 20px; border-left: 1px solid #ddd; padding-left: 20px;">By Location:</span>
+        <span><i class="weekly-legend-swatch" style="background: #4d7cff;"></i>Quezon City</span>
+        <span><i class="weekly-legend-swatch" style="background: #8be0a8;"></i>Iloilo City</span>
+        <span><i class="weekly-legend-swatch" style="background: #ffe27a;"></i>Bohol</span>
+        <span><i class="weekly-legend-swatch" style="background: #8b5cf6;"></i>Alabang</span>
+      </div>`;
+      
+      chart.innerHTML = `<div class="weekly-chart-title">${escapeHtml(monthLabel)}</div>${legend}<div class="weekly-chart-scroll"><svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(monthLabel)} assessment count"><g>${gridLines}</g><polyline points="${firstPoints}" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6" class="weekly-line overall"></polyline><polyline points="${secondPoints}" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6" class="weekly-line overall"></polyline>${locationLines}${dots}${labels}</svg></div>`;
+    }
+
+    function updateDeleteSelectedButtonState() {
+      const deleteButton = document.getElementById('deleteSelectedHistoryBtn');
+      const count = document.querySelectorAll('.history-delete-checkbox:checked').length;
+      deleteButton.disabled = count === 0;
+      deleteButton.textContent = count > 0 ? `Delete (${count})` : 'Delete';
+    }
+
+    function updateDeleteNotificationButtonState() {
+      const deleteButton = document.getElementById('deleteSelectedNotificationsBtn');
+      const count = document.querySelectorAll('.notification-delete-checkbox:checked').length;
+      deleteButton.disabled = count === 0;
+      deleteButton.textContent = count > 0 ? `Delete (${count})` : 'Delete';
+    }
+
+    function renderSentHistory(searchTerm = '') {
+      const search = searchTerm.trim().toLowerCase();
+      const historyBody = document.getElementById('sentEmailHistoryBody');
+      const records = getVisibleHistoryRecords()
+        .filter(item => !search || `${item.name || ''} ${item.email || ''} ${item.location || ''}`.toLowerCase().includes(search))
+        .sort((first, second) => Number(second.timestamp || 0) - Number(first.timestamp || 0));
+
+      historyBody.innerHTML = records.length
+        ? records.map((item, index) => `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${escapeHtml(item.name || '')}</td>
+            <td>${escapeHtml(item.email || '')}</td>
+            <td>${escapeHtml(normalizeLocation(item.location || ''))}</td>
+            <td>${escapeHtml(item.date || '')}</td>
+            <td><button class="history-row-button history-view-button" type="button" data-record-id="${escapeHtml(item.recordId || '')}">View</button></td>
+            <td><button class="history-row-button history-resend-button" type="button" data-record-id="${escapeHtml(item.recordId || '')}">Send</button></td>
+            <td><input type="checkbox" class="history-delete-checkbox" data-record-id="${escapeHtml(item.recordId || '')}" aria-label="Select ${escapeHtml(item.name || 'record')} for deletion"></td>
+          </tr>`).join('')
+        : '<tr><td colspan="8">No sent email records found</td></tr>';
+
+      historyBody.querySelectorAll('.history-delete-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', updateDeleteSelectedButtonState);
+      });
+      historyBody.querySelectorAll('.history-view-button').forEach(button => {
+        button.addEventListener('click', () => showSentPackages(button.dataset.recordId));
+      });
+      historyBody.querySelectorAll('.history-resend-button').forEach(button => {
+        button.addEventListener('click', () => resendSentEmail(button.dataset.recordId, button));
+      });
+      updateDeleteSelectedButtonState();
+    }
+
+    function renderRecentSentHistory(searchTerm = '') {
+      const search = searchTerm.trim().toLowerCase();
+      const recentList = document.getElementById('recentSentHistoryList');
+      const records = getVisibleHistoryRecords()
+        .filter(item => !search || `${item.name || ''} ${item.email || ''} ${item.location || ''}`.toLowerCase().includes(search))
+        .sort((first, second) => Number(second.timestamp || 0) - Number(first.timestamp || 0));
+
+      recentList.innerHTML = records.length
+        ? records.map(item => `<li class="history-item recent-history-row"><input type="checkbox" class="recent-history-delete-checkbox" data-record-id="${escapeHtml(item.recordId || '')}" aria-label="Select ${escapeHtml(item.name || 'record')} for deletion"><span class="history-item-text">${escapeHtml(item.date || '')} - ${escapeHtml(item.name || '')} - ${escapeHtml(item.email || '')} - ${escapeHtml(item.location || '')}</span></li>`).join('')
+        : `<li class="sent-history-empty">${search ? 'No matching assessments' : 'No sent assessments recorded'}</li>`;
+
+      recentList.querySelectorAll('.recent-history-delete-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', updateRecentDeleteButtonState);
+      });
+      updateRecentDeleteButtonState();
+    }
+
+    function updateRecentDeleteButtonState() {
+      const deleteButton = document.getElementById('deleteRecentHistoryBtn');
+      const count = document.querySelectorAll('.recent-history-delete-checkbox:checked').length;
+      deleteButton.disabled = count === 0;
+      deleteButton.textContent = count > 0 ? `Delete (${count})` : 'Delete';
+    }
+
+    function renderReports() {
+      const notificationSearch = document.getElementById('notificationSearchInput')?.value.trim().toLowerCase() || '';
+      const matchesNotificationSearch = item => !notificationSearch || `${item.name || ''} ${item.email || ''} ${item.location || ''}`.toLowerCase().includes(notificationSearch);
+      const counts = {
+        'Quezon City': 0,
+        'Iloilo City': 0,
+        'Alabang': 0,
+        'Bohol': 0
+      };
+      const notificationCounts = {
+        'Quezon City': 0,
+        'Iloilo City': 0,
+        'Alabang': 0,
+        'Bohol': 0
+      };
+      const statusCounts = Object.fromEntries(Object.keys(notificationCounts).map(location => [location, { 'No Status': 0, Done: 0 }]));
+      getVisibleHistoryRecords()
+        .forEach(item => {
+          const location = normalizeLocation(item.location);
+          if (counts[location] !== undefined) {
+            counts[location] += 1;
+          }
+        });
+      // Keep the candidate status graph historical instead of resetting it at midnight.
+      getLatestNotificationRecords()
+        .forEach(item => {
+          const location = normalizeLocation(item.location);
+          const status = item.status === 'Done' ? 'Done' : 'No Status';
+          if (notificationCounts[location] !== undefined) {
+            notificationCounts[location] += 1;
+            statusCounts[location][status] += 1;
+          }
+        });
+
+      const locations = Object.keys(counts);
+      const totalCount = getVisibleHistoryRecords().length;
+      const maxCount = Math.max(...locations.map(location => counts[location]), 1);
+      locations.forEach(location => {
+        const countCellId = `reportCount-${location.toLowerCase().replaceAll(' ', '-')}`;
+        const countCell = document.getElementById(countCellId);
+        if (countCell) countCell.textContent = counts[location];
+        const notificationCountCell = document.getElementById(`notificationCount-${location.toLowerCase().replaceAll(' ', '-')}`);
+        if (notificationCountCell) notificationCountCell.textContent = notificationCounts[location];
+        const noStatusCell = document.getElementById(`notificationNoStatus-${location.toLowerCase().replaceAll(' ', '-')}`);
+        if (noStatusCell) noStatusCell.textContent = statusCounts[location]['No Status'];
+      });
+      const detailsBody = document.getElementById('notificationDetailsBody');
+      if (detailsBody) {
+        const records = getVisibleNotificationRecords()
+          .filter(matchesNotificationSearch)
+          .sort((first, second) => Number(second.timestamp || 0) - Number(first.timestamp || 0));
+        detailsBody.innerHTML = records.length
+          ? records.map((item, index) => `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${escapeHtml(item.name || '')}</td>
+              <td>${escapeHtml(item.email || '')}</td>
+              <td>${escapeHtml(item.location || '')}</td>
+              <td>${escapeHtml(item.date || '')}</td>
+              <td>
+                <label class="notification-status-cell">
+                  <input type="checkbox" class="notification-status-checkbox" data-record-id="${item.recordId || ''}" data-name="${escapeHtml(item.name || '')}" data-email="${escapeHtml(item.email || '')}" data-location="${escapeHtml(item.location || '')}"${item.status === 'Done' ? ' checked' : ''}>
+                  <span>${item.status === 'Done' ? 'Done' : 'No Status'}</span>
+                </label>
+              </td>
+              <td>
+                <input type="checkbox" class="notification-delete-checkbox" data-record-id="${item.recordId || ''}" aria-label="Select notification record for deletion">
+              </td>
+            </tr>`).join('')
+          : '<tr><td colspan="7">No candidate notifications yet</td></tr>';
+        detailsBody.querySelectorAll('.notification-status-checkbox').forEach(checkbox => {
+          checkbox.addEventListener('change', async () => {
+            const statusLabel = checkbox.closest('.notification-status-cell').querySelector('span');
+            const status = checkbox.checked ? 'Done' : 'No Status';
+            statusLabel.textContent = status;
+            try {
+              await updateHistoryStatus(checkbox.dataset.recordId, status);
+            } catch (error) {
+              pendingNotificationStatuses.delete(checkbox.dataset.recordId);
+              checkbox.checked = !checkbox.checked;
+              statusLabel.textContent = checkbox.checked ? 'Done' : 'No Status';
+              const errorDetails = error?.code ? `${error.code}: ${error.message || 'permission denied'}` : (error?.message || 'Unknown error');
+              alert(`Unable to save the status. ${errorDetails}`);
+              console.error('Firestore status update failed:', error);
+            }
+          });
+        });
+        detailsBody.querySelectorAll('.notification-delete-checkbox').forEach(checkbox => {
+          checkbox.addEventListener('change', updateDeleteNotificationButtonState);
+        });
+
+      }
+      const notificationStatusChart = document.getElementById('notificationStatusChart');
+      if (notificationStatusChart) {
+        const maxNotificationValue = Math.max(...locations.flatMap(location => [
+          notificationCounts[location],
+          statusCounts[location]['No Status']
+        ]), 1);
+        const renderNotificationGraph = (title, type, values) => `
+          <div class="notification-mini-chart">
+            <div class="notification-mini-chart-title">
+              <i class="notification-chart-swatch ${type}"></i>${title}
+            </div>
+            <div class="notification-chart-columns">
+              ${locations.map((location, index) => `
+                <div class="notification-chart-location">
+                  <div class="notification-chart-bars">
+                    <div class="notification-chart-bar-wrap" title="${escapeHtml(location)} ${title}: ${values[location]}">
+                      <strong>${values[location]}</strong>
+                      <div class="notification-chart-bar ${type} ${type === 'count' ? `notification-count-${index}` : ''}" style="height: ${(values[location] / maxNotificationValue) * 100}%"></div>
+                    </div>
+                  </div>
+                  <span>${escapeHtml(location)}</span>
+                </div>`).join('')}
+            </div>
+          </div>`;
+        notificationStatusChart.innerHTML = `
+          ${renderNotificationGraph('Count', 'count', notificationCounts)}
+          ${renderNotificationGraph('No Status', 'no-status', Object.fromEntries(locations.map(location => [location, statusCounts[location]['No Status']])))}`;
+      }
+      const totalCountElement = document.getElementById('reportTotalCount');
+      if (totalCountElement) totalCountElement.textContent = totalCount;
+      renderWeeklyAssessmentChart();
+      const chart = document.getElementById('reportChart');
+      if (!chart) return;
+      chart.innerHTML = locations.length
+        ? locations.map((location, index) => `
+          <div class="report-bar-row">
+            <span class="report-bar-label">${escapeHtml(location)}</span>
+            <div class="report-bar-track"><div class="report-bar bar-${index % 6}" style="width: ${(counts[location] / maxCount) * 100}%"></div></div>
+            <strong>${counts[location]}</strong>
+          </div>`).join('')
+        : '<p class="report-empty">No assessments recorded</p>';
+    }
+
+    function csvValue(value) {
+      return `"${String(value ?? '').replace(/"/g, '""')}"`;
+    }
+
+    function downloadCsv(filename, rows) {
+      const csv = rows.map(row => row.map(csvValue).join(',')).join('\r\n');
+      const downloadUrl = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(downloadUrl);
+    }
+
+    function exportHistoryCsv() {
+      const start = document.getElementById('exportDateInput').value;
+      const end = document.getElementById('exportEndInput').value;
+      const exportStatus = document.getElementById('exportStatus');
+      if (!start || !end) {
+        exportStatus.textContent = 'Choose a start and end date first.';
+        exportStatus.className = 'export-status error';
+        return;
+      }
+      if (start > end) {
+        exportStatus.textContent = 'The start date must be before the end date.';
+        exportStatus.className = 'export-status error';
+        return;
+      }
+
+      const records = getVisibleHistoryRecords().filter(item => {
+        const dateKey = getRecordDateKey(item);
+        return dateKey >= start && dateKey <= end;
+      });
+      if (records.length === 0) {
+        exportStatus.textContent = 'No records found in that range.';
+        exportStatus.className = 'export-status error';
+        return;
+      }
+
+      const rows = [
+        ['Name', 'Email', 'Date and Time', 'Location'],
+        ...records.map(item => [item.name, item.email, item.date, normalizeLocation(item.location)])
+      ];
+      downloadCsv(`sagility-assessments-${start}-to-${end}.csv`, rows);
+      exportStatus.textContent = `${records.length} record(s) exported.`;
+      exportStatus.className = 'export-status success';
+    }
+
+    function exportNotificationCsv() {
+      const start = document.getElementById('notificationExportDateInput').value;
+      const end = document.getElementById('notificationExportEndInput').value;
+      const exportStatus = document.getElementById('notificationExportStatus');
+      if (!start || !end) {
+        exportStatus.textContent = 'Choose a start and end date first.';
+        exportStatus.className = 'export-status error';
+        return;
+      }
+      if (start > end) {
+        exportStatus.textContent = 'The start date must be before the end date.';
+        exportStatus.className = 'export-status error';
+        return;
+      }
+
+      const records = getVisibleNotificationRecords().filter(item => {
+        const dateKey = getRecordDateKey(item);
+        return dateKey >= start && dateKey <= end;
+      });
+      if (records.length === 0) {
+        exportStatus.textContent = 'No notification records found in that range.';
+        exportStatus.className = 'export-status error';
+        return;
+      }
+
+      const rows = [
+        ['Name', 'Email', 'Location', 'Date and Time', 'Status'],
+        ...records.map(item => [item.name, item.email, normalizeLocation(item.location), item.date, item.status === 'Done' ? 'Done' : 'No Status'])
+      ];
+      downloadCsv(`sagility-notifications-${start}-to-${end}.csv`, rows);
+      exportStatus.textContent = `${records.length} notification record(s) exported.`;
+      exportStatus.className = 'export-status success';
+    }
+
+    function getHistoryRecord(recordId) {
+      return sentHistoryRecords.find(record => record.recordId === recordId);
+    }
+
+    function showSentPackages(recordId) {
+      const record = getHistoryRecord(recordId);
+      const dialog = document.getElementById('packageViewDialog');
+      const list = document.getElementById('packageViewList');
+      const packages = Array.isArray(record?.packages) ? record.packages : [];
+      list.innerHTML = packages.length
+        ? packages.map(item => `<a href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.name || 'Package')}</a>`).join('')
+        : '<p>No package details were saved for this older record.</p>';
+      dialog.showModal();
+    }
+
+    async function resendSentEmail(recordId, button) {
+      const record = getHistoryRecord(recordId);
+      const packages = Array.isArray(record?.packages) ? record.packages : [];
+      if (!record || packages.length === 0) {
+        alert('This record has no saved package details to resend.');
+        return;
+      }
+
+      button.disabled = true;
+      showEmailStatusPopup('Sending follow-up email...', 'sending');
+      try {
+        const payload = {
+          name: record.name,
+          email: record.email,
+          location: record.location,
+          packages,
+          isRetake: false,
+          isFollowUp: true
+        };
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        await addSentHistory(record.name, record.email, record.location, packages, true);
+        showEmailStatusPopup('Follow-up email sent successfully', 'success');
+      } catch (error) {
+        console.error('Follow-up email failed:', error);
+        showEmailStatusPopup('Unable to send follow-up email', 'error');
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    function exportSentEmailHistory() {
+      const start = document.getElementById('historyExportStart').value;
+      const end = document.getElementById('historyExportEnd').value;
+      const status = document.getElementById('historyExportStatus');
+      if (!start || !end) {
+        status.textContent = 'Choose a start and end date first.';
+        status.className = 'export-status error';
+        return;
+      }
+      if (start > end) {
+        status.textContent = 'The start date must be before the end date.';
+        status.className = 'export-status error';
+        return;
+      }
+
+      const records = getVisibleHistoryRecords().filter(item => {
+        const dateKey = getRecordDateKey(item);
+        return dateKey >= start && dateKey <= end;
+      });
+      if (records.length === 0) {
+        status.textContent = 'No sent email records found in that range.';
+        status.className = 'export-status error';
+        return;
+      }
+
+      const rows = [
+        ['#', 'Name', 'Email', 'Location', 'Date and Time', 'Packages'],
+        ...records.map((item, index) => [
+          index + 1,
+          item.name,
+          item.email,
+          normalizeLocation(item.location),
+          item.date,
+          (Array.isArray(item.packages) ? item.packages : []).map(packageItem => packageItem.name).join(' | ')
+        ])
+      ];
+      downloadCsv(`sent-email-history-${start}-to-${end}.csv`, rows);
+      status.textContent = `${records.length} record(s) exported.`;
+      status.className = 'export-status success';
+    }
+
+    async function addSentHistory(candidateName, recipient, location, packages = [], isFollowUp = false) {
+      await firebaseAuthReady;
+      const docRef = await firestore.collection('sentHistory').add({
+        date: new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' }),
+        dateKey: getManilaDateKey(),
+        timestamp: Date.now(),
+        name: candidateName,
+        email: recipient,
+        location: normalizeLocation(location),
+        packages,
+        isFollowUp,
+        deleted: false,
+        deletedAt: null,
+        recordId: ''
+      });
+
+      await firestore.collection('sentHistory').doc(docRef.id).update({ recordId: docRef.id });
+      return docRef.id;
+    }
+
+    async function updateHistoryStatus(recordId, status) {
+      if (!recordId) return;
+      pendingNotificationStatuses.set(recordId, status);
+      const record = sentHistoryRecords.find(item => item.recordId === recordId);
+      if (record) record.status = status;
+      notificationRecords = sentHistoryRecords.filter(item => String(item.source || '').startsWith('candidate-notification'));
+      renderReports();
+
+      await ensureFirebaseAuth();
+      await firestore.collection('sentHistory').doc(recordId).update({ status });
+    }
+
+    function initializeFirebaseHistory() {
+      ensureFirebaseAuth()
+        .then(() => {
+          firestore.collection('sentHistory')
+            .orderBy('timestamp', 'desc')
+            .onSnapshot(snapshot => {
+              const newRecords = snapshot.docs.map(document => {
+                const data = document.data();
+                const pendingStatus = pendingNotificationStatuses.get(document.id);
+                if (pendingStatus && data.status === pendingStatus) {
+                  pendingNotificationStatuses.delete(document.id);
+                }
+                return {
+                  ...data,
+                  status: pendingStatus || data.status,
+                  recordId: document.id
+                };
+              });
+              
+              if (hasLoadedHistory) {
+                newRecords.forEach(record => {
+                  const isCandidateNotification = String(record.source || '') === 'candidate-notification';
+                  if (!previousRecordIds.has(record.recordId) && isCandidateNotification) {
+                    const firstName = String(record.name || '').trim().split(/\s+/)[0];
+                    const location = String(record.location || '').trim();
+                    if (firstName && location) {
+                      triggerAssessmentNotification(firstName, location);
+                    }
+                  }
+                });
+              }
+              
+              previousRecordIds = new Set(newRecords.map(r => r.recordId));
+              hasLoadedHistory = true;
+              
+              sentHistoryRecords = newRecords;
+              notificationRecords = sentHistoryRecords.filter(item => String(item.source || '').startsWith('candidate-notification'));
+              renderSentHistory(document.getElementById('historySearchInput').value);
+              renderRecentSentHistory(document.getElementById('recentHistorySearchInput').value);
+              renderReports();
+            }, error => {
+              document.getElementById('sentEmailHistoryBody').innerHTML = '<tr><td colspan="8">History unavailable: check Firestore rules</td></tr>';
+              console.error('Firestore history read failed:', error);
+            });
+        })
+        .catch(error => {
+          document.getElementById('sentEmailHistoryBody').innerHTML = '<tr><td colspan="8">History unavailable: add this site to Firebase Authorized domains</td></tr>';
+          document.getElementById('emailStatus').textContent = 'Firebase history unavailable.';
+          document.getElementById('emailStatus').className = 'email-status error';
+          console.error('Firebase authentication failed:', error);
+        });
+    }
+
+    document.getElementById('historySearchInput').addEventListener('input', event => {
+      renderSentHistory(event.target.value);
+    });
+    document.getElementById('recentHistorySearchInput').addEventListener('input', event => {
+      renderRecentSentHistory(event.target.value);
+    });
+    document.getElementById('historyExportBtn').addEventListener('click', exportSentEmailHistory);
+
+    document.getElementById('notificationSearchInput').addEventListener('input', renderReports);
+    document.getElementById('notificationSearchBtn').addEventListener('click', renderReports);
+    document.getElementById('weeklyReportMonthInput').addEventListener('change', renderWeeklyAssessmentChart);
+
+    document.getElementById('exportDataBtn').addEventListener('click', exportHistoryCsv);
+    document.getElementById('notificationExportDataBtn').addEventListener('click', exportNotificationCsv);
+
+    document.getElementById('deleteSelectedHistoryBtn').addEventListener('click', async () => {
+      const deleteButton = document.getElementById('deleteSelectedHistoryBtn');
+      const selectedCheckboxes = document.querySelectorAll('.history-delete-checkbox:checked');
+      if (!selectedCheckboxes.length) return;
+
+      const passwordInput = window.prompt('Enter password to delete history:');
+      if (passwordInput !== 'Sagility_1') {
+        if (passwordInput !== null) {
+          alert('Incorrect password.');
+        }
+        return;
+      }
+
+      const confirmed = window.confirm('Delete selected history records?');
+      if (!confirmed) return;
+
+      const ids = [...selectedCheckboxes]
+        .map(checkbox => checkbox.dataset.recordId)
+        .filter(Boolean);
+      if (!ids.length) return;
+
+      deleteButton.disabled = true;
+      try {
+        await firebaseAuthReady;
+        const batch = firestore.batch();
+        ids.forEach(id => batch.delete(firestore.collection('sentHistory').doc(id)));
+        await batch.commit();
+
+        const deletedIds = new Set(ids);
+        sentHistoryRecords = sentHistoryRecords.filter(record => !deletedIds.has(record.recordId));
+        persistState();
+        renderSentHistory(document.getElementById('historySearchInput').value);
+        renderReports();
+      } catch (error) {
+        console.error('Firestore batch delete failed:', error);
+        alert('Unable to delete the selected records from all browsers. Please check the Firestore permissions and try again.');
+        updateDeleteSelectedButtonState();
+      }
+    });
+
+    document.getElementById('deleteRecentHistoryBtn').addEventListener('click', async () => {
+      const deleteButton = document.getElementById('deleteRecentHistoryBtn');
+      const selectedCheckboxes = document.querySelectorAll('.recent-history-delete-checkbox:checked');
+      if (!selectedCheckboxes.length) return;
+
+      const passwordInput = window.prompt('Enter password to delete history:');
+      if (passwordInput !== 'Sagility_1') {
+        if (passwordInput !== null) alert('Incorrect password.');
+        return;
+      }
+
+      if (!window.confirm('Delete selected history records?')) return;
+      const ids = [...selectedCheckboxes].map(checkbox => checkbox.dataset.recordId).filter(Boolean);
+      if (!ids.length) return;
+
+      deleteButton.disabled = true;
+      try {
+        await firebaseAuthReady;
+        const batch = firestore.batch();
+        ids.forEach(id => batch.delete(firestore.collection('sentHistory').doc(id)));
+        await batch.commit();
+        const deletedIds = new Set(ids);
+        sentHistoryRecords = sentHistoryRecords.filter(record => !deletedIds.has(record.recordId));
+        renderRecentSentHistory(document.getElementById('recentHistorySearchInput').value);
+        renderSentHistory(document.getElementById('historySearchInput').value);
+        renderReports();
+      } catch (error) {
+        console.error('Recent history delete failed:', error);
+        alert('Unable to delete the selected records. Please check the Firestore permissions.');
+        updateRecentDeleteButtonState();
+      }
+    });
+
+    document.getElementById('deleteSelectedNotificationsBtn').addEventListener('click', async () => {
+      const deleteButton = document.getElementById('deleteSelectedNotificationsBtn');
+      const selectedCheckboxes = document.querySelectorAll('.notification-delete-checkbox:checked');
+      if (!selectedCheckboxes.length) return;
+
+      const passwordInput = window.prompt('Enter password to delete notification records:');
+      if (passwordInput !== 'Sagility_1') {
+        if (passwordInput !== null) alert('Incorrect password.');
+        return;
+      }
+
+      if (!window.confirm('Delete selected notification records?')) return;
+      const ids = [...selectedCheckboxes].map(checkbox => checkbox.dataset.recordId).filter(Boolean);
+      if (!ids.length) return;
+
+      deleteButton.disabled = true;
+      try {
+        await firebaseAuthReady;
+        const batch = firestore.batch();
+        ids.forEach(id => batch.delete(firestore.collection('sentHistory').doc(id)));
+        await batch.commit();
+
+        const deletedIds = new Set(ids);
+        sentHistoryRecords = sentHistoryRecords.filter(record => !deletedIds.has(record.recordId));
+        notificationRecords = notificationRecords.filter(record => !deletedIds.has(record.recordId));
+        renderReports();
+        updateDeleteNotificationButtonState();
+      } catch (error) {
+        console.error('Notification record delete failed:', error);
+        alert('Unable to delete the selected notification records. Please check the Firestore permissions and try again.');
+        updateDeleteNotificationButtonState();
+      }
+    });
+
+    setInterval(() => {
+      renderSentHistory(document.getElementById('historySearchInput').value);
+      renderRecentSentHistory(document.getElementById('recentHistorySearchInput').value);
+      renderReports();
+    }, 60000);
+
+    // Update individual package item UI
+    function updatePackageItemUI(checkbox) {
+      const label = checkbox.closest('.package-item');
+      if (checkbox.checked) {
+        label.classList.add('checked');
+      } else {
+        label.classList.remove('checked');
+      }
+    }
+
+    // Add event listeners to all checkboxes
+    document.querySelectorAll('.package-checkbox').forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        updatePackageItemUI(this);
+        updateSelectedPackages();
+        renderEmailPreview();
+        persistState();
+      });
+    });
+
+    function renderEmailPreview() {
+      const name = document.getElementById('candidateNameInput').value.trim() || 'Candidate';
+      const location = document.getElementById('locationInput').value.trim() || 'Location';
+      const retake = document.getElementById('retakeCheckbox').checked;
+      const followUp = document.getElementById('followAssessmentCheckbox').checked;
+      const prefix = followUp ? 'Sagility Assessment Follow Up_' : retake ? 'Sagility Assessment Retake_' : 'Sagility Assessment_';
+      const packages = getOrderedSelectedPackageCheckboxes();
+      const packageLinks = packages.map(checkbox =>
+        `<li><strong>${escapeHtml(checkbox.dataset.package)}</strong>: <a href="${escapeHtml(checkbox.dataset.url)}">Click here</a></li>`
+      ).join('');
+      const introduction = followUp
+        ? '<p>I would like to follow up on your assessment completion. Kindly complete the assessments below at your earliest convenience:</p>'
+        : retake
+          ? '<p>Sorry to inform you that you did not achieve the required assessment score(s) on one or more of the tests below. Please click the link(s) below to retake your assessment.</p>'
+          : '<p>Good Day!</p><p>Please click link/s below to start your assessment.</p>';
+      const notificationUrl = 'https://assessmentportal.sagilife.online/candidate.html';
+      const meetingUrl = 'https://teams.microsoft.com/l/meetup-join/19%3ameeting_YWUyMzUzYzYtNTgxYS00ZWVhLWJjN2UtNTA4YWM2Mzg1Zjdk%40thread.v2/0?context=%7b%22Tid%22%3a%22c0745124-84a4-4909-bb95-307ad5a8ae15%22%2c%22Oid%22%3a%22e7eb26f1-7544-4bac-bfac-c4674034791e%22%7d';
+      const body = `<p>Hi ${escapeHtml(name)},</p>
+        ${introduction}
+        <ol>${packageLinks || '<li>No packages selected</li>'}</ol>
+        <h3>Note:</h3>
+        <p>If you have completed your assessment, please click the link below to notify our Test Admin that you have finished your assessment.</p>
+        <p><strong>Notify Test Admin:</strong> <a href="${notificationUrl}">Click here</a></p>
+        <p>Once notified, our Test Admin will review your assessment status and proceed with checking your results.</p>
+        <h3>Before You Start:</h3>
+        <ul>
+          <li>We recommend using a laptop or desktop computer and a headset for the best experience. However, if a laptop or desktop computer is not available, you may use your mobile device to complete the assessment.</li>
+          <li>Make sure you are in a quiet environment.</li>
+          <li>Use your active email address and enter the security code when prompted.</li>
+          <li>Read all instructions carefully before taking the assessment.</li>
+        </ul>
+        <h3>Need Assistance?</h3>
+        <p>If you need assistance, you may join our Virtual Assessment session so we can guide you on how to take your assessment or provide any necessary follow-ups.</p>
+        <p>Time: 11am-8pm MNL<br>Link: <a href="${meetingUrl}">Meeting Invite</a><br>Meeting ID: 479 656 747 406 7<br>Passcode: vi3nV3NB</p>
+        <h3>Important Reminders:</h3>
+        <ul>
+          <li>⚠️ Use the assessment link only once.</li>
+          <li>🔒 Do not share or forward the link.</li>
+          <li>📍 The system records IP address and location.</li>
+          <li>📇 Assessment materials are confidential. Any misuse may affect your application.</li>
+        </ul>
+        <p>For questions or assistance, please contact:<br><a href="mailto:PHLTestAdmin@Sagilityhealth.com">PHLTestAdmin@Sagilityhealth.com</a></p>
+        <p>Thank you, and good luck with your assessment!</p>
+        <p><strong>Best Regards,<br>Talent Acquisition- Sagility Recruitment - Test Admin<br>${escapeHtml(location)}</strong></p>`;
+      document.getElementById('emailPreviewSubject').textContent = `Subject: ${prefix}${name}_${location}`;
+      document.getElementById('emailPreviewBody').innerHTML = body;
+    }
+
+    ['candidateNameInput', 'emailInput', 'locationInput', 'retakeCheckbox', 'followAssessmentCheckbox'].forEach(id => {
+      document.getElementById(id).addEventListener('input', renderEmailPreview);
+      document.getElementById(id).addEventListener('change', renderEmailPreview);
+    });
+    document.querySelectorAll('.package-checkbox').forEach(checkbox => checkbox.addEventListener('change', renderEmailPreview));
+    renderEmailPreview();
+
+    document.getElementById('sendEmailBtn').addEventListener('click', async () => {
+      const sendButton = document.getElementById('sendEmailBtn');
+      const emailStatus = document.getElementById('emailStatus');
+      const candidateName = document.getElementById('candidateNameInput').value.trim();
+      const recipient = document.getElementById('emailInput').value.trim();
+      const location = document.getElementById('locationInput').value.trim();
+      const isRetake = document.getElementById('retakeCheckbox').checked;
+      const isFollowUp = document.getElementById('followAssessmentCheckbox').checked;
+      const selectedPackages = getOrderedSelectedPackageCheckboxes();
+      const packages = selectedPackages.map(checkbox => ({
+        name: checkbox.dataset.package,
+        url: checkbox.dataset.url
+      }));
+
+      if (!headerLocationSelect.value) {
+        headerLocationSelect.focus();
+        alert('Please choose a location first.');
+        return;
+      }
+
+      if (!candidateName || !recipient || !location || packages.length === 0) {
+        emailStatus.textContent = '';
+        emailStatus.className = 'email-status';
+        alert('Please enter the candidate name, email, location, and select at least one package.');
+        return;
+      }
+
+      const payload = { name: candidateName, email: recipient, location, packages, isRetake, isFollowUp };
+      sendButton.disabled = true;
+      emailStatus.textContent = 'Sending Assessment...........';
+      emailStatus.className = 'email-status sending';
+
+      if (location === 'Testing') {
+        emailStatus.textContent = 'Test mode: nothing was sent.';
+        emailStatus.className = 'email-status success';
+        sendButton.disabled = false;
+        return;
+      }
+
+      if (GOOGLE_SCRIPT_URL) {
+        try {
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
+          emailStatus.textContent = 'Successfully Sent.';
+          emailStatus.className = 'email-status success';
+
+          try {
+            await addSentHistory(candidateName, recipient, location, packages, isFollowUp);
+          } catch (historyError) {
+            emailStatus.textContent = 'Successfully Sent. History sync failed.';
+            emailStatus.className = 'email-status error';
+            console.error('Firestore history write failed:', historyError);
+          }
+        } catch (error) {
+          emailStatus.textContent = 'Unable to connect to the email service.';
+          emailStatus.className = 'email-status error';
+        } finally {
+          sendButton.disabled = false;
+        }
+        return;
+      }
+
+      const packageLinks = packages.map((item, index) =>
+        `Package ${index + 1} - ${item.name}: ${item.url}`
+      );
+      const subjectPrefix = isFollowUp
+        ? 'Sagility Assessment Follow Up_'
+        : isRetake ? 'Sagility Assessment Retake_' : 'Sagility Assessment_';
+      const subject = `${subjectPrefix}${candidateName}_${location}`;
+      const intro = isFollowUp
+        ? `Hi ${candidateName},\n\nGood Day!\n\nI would like to follow up on your assessment completion. Kindly complete the assessments below at your earliest convenience.`
+        : isRetake
+        ? `Hi ${candidateName},\n\nSorry to inform you that you did not achieve the required assessment score(s) on one or more of the tests below. Please click the link(s) below to retake your assessment.\n\nPlease click link/s below to start your assessment.`
+        : `Hi ${candidateName},\n\nGood Day!\n\nPlease click link/s below to start your assessment.`;
+      const body = `${intro}\n\n${packageLinks.join('\n')}\n\nBefore You Start:\n\n• We recommend using a Laptop/PC and a headset.\n• Make sure you are in a quiet environment.\n• Use your active email address and enter the security code when prompted.\n• Read all instructions carefully before taking the assessment.\n\nNeed Assistance?\n\nIf you need assistance, you may join our Virtual Assessment session so we can guide you on how to take your assessment or provide any necessary follow-ups.\n\nTime: 11am-8pm MNL\nLink: Meeting Invite\nMeeting ID: 479 656 747 406 7\nPasscode: vi3nV3NB\n\nImportant Reminders:\n\n⚠️ Use the assessment link only once.\n🔒 Do not share or forward the link.\n📍 The system records IP address and location.\n📇 Assessment materials are confidential. Any misuse may affect your application.\n\nFor questions or assistance, please contact:\nPHLTestAdmin@Sagilityhealth.com\n\nThank you, and good luck with your assessment!\n\nBest Regards,\n\nTalent Acquisition- Sagility Recruitment - Test Admin\n${location}`;
+      window.location.href = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      await addSentHistory(candidateName, recipient, location, packages, isFollowUp);
+      emailStatus.textContent = 'Email draft opened.';
+      emailStatus.className = 'email-status success';
+      sendButton.disabled = false;
+    });
+
+    document.getElementById('clearDataBtn').addEventListener('click', () => {
+      document.getElementById('candidateNameInput').value = '';
+      document.getElementById('emailInput').value = '';
+      document.getElementById('locationInput').selectedIndex = 0;
+      headerLocationSelect.value = '';
+      localStorage.removeItem(LOCATION_STORAGE_KEY);
+      document.getElementById('retakeCheckbox').checked = false;
+      document.getElementById('followAssessmentCheckbox').checked = false;
+      document.querySelectorAll('.package-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+        updatePackageItemUI(checkbox);
+      });
+      sentHistoryRecords = [];
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+      persistHiddenHistoryKeys([]);
+      document.getElementById('emailStatus').textContent = '';
+      document.getElementById('emailStatus').className = 'email-status';
+      updateSelectedPackages();
+      renderSentHistory(document.getElementById('historySearchInput').value);
+      renderRecentSentHistory(document.getElementById('recentHistorySearchInput').value);
+      renderReports();
+      alert('Data cleared successfully.');
+    });
+
+    document.querySelector('.clear-data-action').addEventListener('click', () => {
+      document.querySelectorAll('.seat-card input').forEach(input => {
+        input.value = '';
+      });
+    });
+
+    const typingResultsState = { records: [] };
+    const typingResultsBody = document.getElementById('typingResultsBody');
+    const typingResultsNameFilter = document.getElementById('typingResultsNameFilter');
+    const typingResultsSeatFilter = document.getElementById('typingResultsSeatFilter');
+    const typingResultsLocationFilter = document.getElementById('typingResultsLocationFilter');
+    const typingResultsChart = document.getElementById('typingResultsChart');
+    const toggleTypingResultsChartBtn = document.getElementById('toggleTypingResultsChartBtn');
+    const typingChartHint = document.getElementById('typingChartHint');
+    const deleteTypingResultsBtn = document.getElementById('deleteTypingResultsBtn');
+    const selectedTypingResultIds = new Set();
+
+    toggleTypingResultsChartBtn.addEventListener('click', () => {
+      const isCollapsed = typingResultsChart.classList.toggle('is-collapsed');
+      toggleTypingResultsChartBtn.setAttribute('aria-expanded', String(!isCollapsed));
+      toggleTypingResultsChartBtn.textContent = isCollapsed ? 'Show graph' : 'Hide graph';
+      typingChartHint.classList.remove('is-visible');
+    });
+
+    let typingChartHintTimer;
+    const typingChartHintObserver = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        typingChartHint.classList.add('is-visible');
+        window.clearTimeout(typingChartHintTimer);
+        typingChartHintTimer = window.setTimeout(() => typingChartHint.classList.remove('is-visible'), 4500);
+      }
+    }, { threshold: 0.8 });
+    typingChartHintObserver.observe(toggleTypingResultsChartBtn);
+
+    function escapeTypingResult(value) {
+      return String(value ?? '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[character]);
+    }
+
+    function formatTypingResultDate(value, completedAt, finishedAt) {
+      const timestampValue = finishedAt || completedAt;
+      const timestamp = typeof timestampValue === 'object' && timestampValue !== null && typeof timestampValue.toMillis === 'function'
+        ? timestampValue.toMillis()
+        : Number(timestampValue);
+      if (timestamp) {
+        const completedDate = new Date(timestamp);
+        if (!Number.isNaN(completedDate.getTime())) {
+          const manilaOptions = { timeZone: 'Asia/Manila' };
+          return `${completedDate.toLocaleDateString('en-US', manilaOptions)}, ${completedDate.toLocaleTimeString('en-US', { ...manilaOptions, hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
+        }
+      }
+      const dateText = String(value || '');
+      const match = dateText.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (match) return `${match[2]}/${match[3]}/${match[1]}`;
+      const date = new Date(value || completedAt);
+      return Number.isNaN(date.getTime())
+        ? dateText
+        : date.toLocaleDateString('en-US');
+    }
+
+    function formatTypingResultDuration(value) {
+      return value ? String(value) : '-';
+    }
+
+    function renderTypingResultsChart(records) {
+      if (!typingResultsChart) return;
+      const ranges = [
+        { label: '0-19', test: score => score < 20 },
+        { label: '20-29', test: score => score >= 20 && score < 30 },
+        { label: '30-39', test: score => score >= 30 && score < 40 },
+        { label: '40-49', test: score => score >= 40 && score < 50 },
+        { label: '50+', test: score => score >= 50 }
+      ];
+      const locations = [...new Set(records.map(record => String(record.location || 'Unknown')))].sort();
+      if (!records.length || !locations.length) {
+        typingResultsChart.innerHTML = '<p class="report-empty">No typing test data for this filter.</p>';
+        return;
+      }
+
+      const width = 1400;
+      const height = 220;
+      const left = 38;
+      const right = 10;
+      const top = 20;
+      const bottom = 42;
+      const plotWidth = width - left - right;
+      const plotHeight = height - top - bottom;
+      const series = locations.map(location => ({
+        location,
+        values: ranges.map(range => records.filter(record => (
+          String(record.location || 'Unknown') === location && range.test(Number(record.score) || 0)
+        )).length)
+      }));
+      const maxCount = Math.max(...series.flatMap(item => item.values), 1);
+      const xStep = ranges.length > 1 ? plotWidth / (ranges.length - 1) : plotWidth;
+      const locationColors = {
+        'Alabang': '#e56b9f',
+        'Bohol': '#e5b83f',
+        'Iloilo City': '#27a66f',
+        'Quezon City': '#4d7cff'
+      };
+      const fallbackColors = ['#7b61a8', '#168c9c'];
+      const yFor = value => top + plotHeight - (value / maxCount) * plotHeight;
+      const gridLines = [0, 0.5, 1].map(ratio => {
+        const y = yFor(Math.round(maxCount * ratio));
+        return `<line x1="${left}" y1="${y}" x2="${width - right}" y2="${y}" class="typing-chart-grid-line"></line><text x="${left - 8}" y="${y + 4}" class="typing-chart-axis-label" text-anchor="end">${Math.round(maxCount * ratio)}</text>`;
+      }).join('');
+      const labels = ranges.map((range, index) => `<text x="${left + index * xStep}" y="${height - 20}" class="typing-chart-axis-label" text-anchor="middle">${range.label}</text>`).join('');
+      const lines = series.map((item, seriesIndex) => {
+        const color = locationColors[item.location] || fallbackColors[seriesIndex % fallbackColors.length];
+        const points = item.values.map((value, index) => `${left + index * xStep},${yFor(value)}`).join(' ');
+        const dots = item.values.map((value, index) => `<circle cx="${left + index * xStep}" cy="${yFor(value)}" r="4" fill="#fff" stroke="${color}" stroke-width="2"><title>${escapeTypingResult(item.location)}, ${ranges[index].label} WPM: ${value}</title></circle>`).join('');
+        return `<polyline points="${points}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>${dots}`;
+      }).join('');
+      const legend = series.map((item, index) => `<span><i class="typing-chart-legend-swatch" style="background:${locationColors[item.location] || fallbackColors[index % fallbackColors.length]}"></i>${escapeTypingResult(item.location)}</span>`).join('');
+      typingResultsChart.innerHTML = `<div class="typing-chart-title">Completed tests by WPM range</div><div class="typing-chart-legend">${legend}</div><div class="typing-chart-scroll"><svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Completed typing tests grouped by WPM range for each location"><g>${gridLines}</g>${lines}${labels}</svg></div>`;
+    }
+
+    function renderTypingResults() {
+      const nameFilter = typingResultsNameFilter.value.trim().toLowerCase();
+      const seatFilter = typingResultsSeatFilter.value.trim().toLowerCase();
+      const locationFilter = typingResultsLocationFilter.value.trim().toLowerCase();
+      const records = typingResultsState.records.filter(record => (
+        String(record.name || '').toLowerCase().includes(nameFilter) &&
+        String(record.seatNumber || '').toLowerCase().includes(seatFilter) &&
+        String(record.location || '').toLowerCase().includes(locationFilter)
+      ));
+
+      typingResultsBody.innerHTML = records.length
+        ? records.map((record, index) => `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${escapeTypingResult(record.name)}</td>
+            <td>${escapeTypingResult(record.location || '-')}</td>
+            <td>${escapeTypingResult(record.seatNumber)}</td>
+            <td>${escapeTypingResult(formatTypingResultDate(record.date, record.completedAt, record.finishedAt))}</td>
+            <td>${escapeTypingResult(formatTypingResultDuration(record.time || record.finishedTime))}</td>
+            <td>${escapeTypingResult(record.score)} WPM</td>
+            <td>${escapeTypingResult(record.accuracy)}%</td>
+            <td><input class="typing-result-checkbox" type="checkbox" data-result-id="${escapeTypingResult(record.id)}" ${selectedTypingResultIds.has(record.id) ? 'checked' : ''} aria-label="Select result for deletion: ${escapeTypingResult(record.name)}"></td>
+          </tr>
+        `).join('')
+        : '<tr><td colspan="9">No typing test results found.</td></tr>';
+      renderTypingResultsChart(records);
+
+      typingResultsBody.querySelectorAll('.typing-result-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+          if (checkbox.checked) selectedTypingResultIds.add(checkbox.dataset.resultId);
+          else selectedTypingResultIds.delete(checkbox.dataset.resultId);
+          updateTypingResultsDeleteControls();
+        });
+      });
+      updateTypingResultsDeleteControls();
+    }
+
+    function updateTypingResultsDeleteControls() {
+      const visibleIds = [...typingResultsBody.querySelectorAll('.typing-result-checkbox')].map(checkbox => checkbox.dataset.resultId);
+      const selectedVisibleCount = visibleIds.filter(id => selectedTypingResultIds.has(id)).length;
+      deleteTypingResultsBtn.disabled = selectedTypingResultIds.size === 0;
+    }
+
+    typingResultsNameFilter.addEventListener('input', renderTypingResults);
+    typingResultsSeatFilter.addEventListener('input', renderTypingResults);
+    typingResultsLocationFilter.addEventListener('input', renderTypingResults);
+    deleteTypingResultsBtn.addEventListener('click', async () => {
+      const ids = [...selectedTypingResultIds];
+      if (!ids.length || !window.confirm(`Delete ${ids.length} selected typing result${ids.length === 1 ? '' : 's'}?`)) return;
+      deleteTypingResultsBtn.disabled = true;
+      try {
+        await ensureFirebaseAuth();
+        const batch = firestore.batch();
+        ids.forEach(id => batch.delete(firestore.collection('typingResults').doc(id)));
+        await batch.commit();
+        ids.forEach(id => selectedTypingResultIds.delete(id));
+      } catch (error) {
+        console.error('Typing result delete failed:', error);
+        alert('Unable to delete the selected typing results. Please check the Firestore permissions.');
+        updateTypingResultsDeleteControls();
+      }
+    });
+    ensureFirebaseAuth()
+      .then(() => {
+        firestore.collection('typingResults').onSnapshot(snapshot => {
+          typingResultsState.records = snapshot.docs
+            .map(document => ({ id: document.id, ...document.data() }))
+            .filter(record => !record.deleted)
+            .sort((first, second) => Number(second.completedAt || 0) - Number(first.completedAt || 0));
+          renderTypingResults();
+        }, error => {
+          console.error('Typing results read failed:', error);
+          typingResultsBody.innerHTML = '<tr><td colspan="9">Results unavailable: check Firestore rules.</td></tr>';
+        });
+      })
+      .catch(error => {
+        console.error('Typing results authentication failed:', error);
+        typingResultsBody.innerHTML = '<tr><td colspan="9">Results unavailable: Firebase authentication failed.</td></tr>';
+      });
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const notificationReport = document.getElementById('notificationReport');
+      const reports = document.getElementById('reports');
+      const weeklyReport = document.getElementById('weeklyReport');
+      notificationReport.after(reports);
+      reports.after(weeklyReport);
+      document.getElementById('weeklyReportMonthInput').value = getManilaDateKey().slice(0, 7);
+      restoreState();
+      renderReports();
+      initializeFirebaseHistory();
+      initializeAssessmentAudioNotifications();
+    });
+  </script>
+  <script type="module" src="seat-manager.js"></script>
+</body>
+</html>

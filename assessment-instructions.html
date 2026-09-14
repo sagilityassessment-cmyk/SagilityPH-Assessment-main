@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment Instructions</title>
+  <style>
+    :root {
+      --navy: #0d2f68;
+      --blue: #08b6d0;
+      --border: #d6dde8;
+      --page: #f3f5f7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding-top: 220px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, .58) 25%, transparent 25%) 0 0 / 360px 360px,
+        linear-gradient(315deg, rgba(166, 224, 187, .34) 25%, transparent 25%) 0 0 / 460px 460px,
+        #dff5e5;
+      color: #111;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .background-shapes {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .background-shape {
+      position: absolute;
+      display: block;
+      opacity: .28;
+      background: #9bd8ad;
+      animation: shape-drift 16s ease-in-out infinite alternate;
+    }
+
+    .shape-one {
+      top: 14%;
+      left: -5%;
+      width: 260px;
+      height: 190px;
+      clip-path: polygon(0 25%, 72% 0, 100% 68%, 38% 100%);
+    }
+
+    .shape-two {
+      top: 42%;
+      right: -4%;
+      width: 310px;
+      height: 240px;
+      background: #b9e8c5;
+      clip-path: polygon(28% 0, 100% 20%, 76% 100%, 0 72%);
+      animation-delay: -5s;
+    }
+
+    .shape-three {
+      bottom: 4%;
+      left: 14%;
+      width: 220px;
+      height: 160px;
+      background: #83c99b;
+      clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+      animation-delay: -9s;
+    }
+
+    .shape-four {
+      top: 8%;
+      right: 18%;
+      width: 150px;
+      height: 120px;
+      background: #c6efd0;
+      clip-path: polygon(0 0, 100% 18%, 78% 100%, 18% 72%);
+      animation-delay: -12s;
+    }
+
+    @keyframes shape-drift {
+      from {
+        transform: translate3d(-12px, 8px, 0) rotate(-3deg);
+      }
+      to {
+        transform: translate3d(18px, -16px, 0) rotate(5deg);
+      }
+    }
+
+    .page-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      padding: 12px 20px 14px;
+      text-align: center;
+      background:
+        linear-gradient(135deg, rgba(210, 250, 220, .34) 0 24%, transparent 24% 58%, rgba(147, 214, 165, .14) 58% 76%, transparent 76%),
+        rgba(235, 255, 241, .46);
+      background-size: 520px 260px, auto;
+      backdrop-filter: blur(20px) saturate(115%);
+      -webkit-backdrop-filter: blur(20px) saturate(115%);
+      border-top: 3px solid rgba(35, 64, 74, .9);
+      border-bottom: 1px solid rgba(91, 176, 117, .34);
+      box-shadow: 0 8px 24px rgba(54, 123, 76, .12), inset 0 1px 0 rgba(255, 255, 255, .65);
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      padding-top: 12px;
+    }
+
+    .logo {
+      width: 145px;
+      max-width: 100%;
+      height: auto;
+    }
+
+    h1 {
+      margin: 12px 0 14px;
+      font-size: clamp(26px, 4vw, 34px);
+    }
+
+    .page-header p {
+      margin: 0 0 14px;
+      font-size: 15px;
+    }
+
+    .instruction-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      width: min(100%, 980px);
+      margin: 0 auto;
+    }
+
+    .level-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex: 0 1 auto;
+      min-width: 0;
+      white-space: nowrap;
+    }
+
+    .instruction-button {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      min-height: 28px;
+      border: 0;
+      border-radius: 4px;
+      padding: 3px 12px;
+      color: #fff;
+      background: var(--navy);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex: 0 1 auto;
+      min-width: 0;
+    }
+
+    .instruction-button:hover {
+      background: var(--blue);
+      color: #06253d;
+    }
+
+    .instruction-button:first-child {
+      background: #2f9e62;
+      color: #fff;
+    }
+
+    .instruction-button:first-child:hover {
+      background: #b7e4c7;
+      color: #1f5d39;
+    }
+
+    .instruction-button:first-child.active:not(:hover) {
+      background: #2f9e62;
+      color: #fff;
+    }
+
+    .instruction-actions .done-assessment-button {
+      margin-left: 2px;
+    }
+
+    .instruction-actions .completion-panel {
+      margin: 0;
+      flex: 0 1 auto;
+      min-width: 0;
+      width: fit-content;
+      flex-basis: 100%;
+    }
+
+    .completion-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-width: 0;
+      margin: 12px auto 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .completion-panel label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #34434d;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .completion-panel select,
+    .done-assessment-button {
+      min-height: 28px;
+      padding: 4px 8px;
+      border: 1px solid #9aa6ad;
+      border-radius: 4px;
+      font: inherit;
+    }
+
+    .completion-panel select {
+      width: 110px;
+      min-width: 0;
+      background: #fff;
+      color: #1f5d39;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .location-seat-stack {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .location-seat-stack label {
+      display: block;
+      margin: 0;
+      line-height: 0;
+    }
+
+    .done-assessment-button {
+      height: 28px;
+      min-width: 0;
+      background: #68747b;
+      color: #fff;
+      font-size: 10px;
+      line-height: 1;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .done-assessment-button:hover {
+      background: #4e5a61;
+    }
+
+    .assistance-button {
+      min-width: 0;
+      height: 28px;
+      min-height: 28px;
+      padding: 4px 8px;
+      border: 1px solid #9aa6ad;
+      border-radius: 4px;
+      background: #d7dde1;
+      color: #34434d;
+      font: inherit;
+      font-size: 10px;
+      line-height: 1;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .assistance-button:hover {
+      background: #c1cbd1;
+    }
+
+    .notification-wait-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      z-index: 20;
+      width: min(calc(100% - 32px), 420px);
+      transform: translate(-50%, -50%) scale(.96);
+      padding: 16px 20px;
+      border: 1px solid #9aa6ad;
+      border-radius: 6px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(23, 43, 52, .2);
+      color: #26343c;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.4;
+      text-align: center;
+      transition: opacity .2s ease, transform .2s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .notification-wait-popup.visible {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .notification-wait-close {
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      border: 0;
+      background: transparent;
+      color: #26343c;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .instruction-button,
+    .done-assessment-button,
+    .assistance-button,
+    .completion-panel select {
+      width: clamp(110px, 18vw, 180px);
+      height: 36px;
+      min-height: 36px;
+      box-sizing: border-box;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .completion-panel select {
+      text-align: center;
+    }
+
+    .document-viewer {
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+      width: min(calc(100% - 24px), 900px);
+      margin: 18px auto 0;
+      padding: 0 12px;
+    }
+
+    .document-frame {
+      display: block;
+      width: 100%;
+      height: min(1100px, calc(100vh - 260px));
+      min-height: 720px;
+      border: 0;
+      background: #fff;
+      box-shadow: 0 3px 14px rgba(0, 0, 0, .12);
+    }
+
+    .document-status {
+      margin: 26px auto;
+      color: #536174;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .pdf-fallback {
+      margin: 12px auto;
+      max-width: 900px;
+      padding: 0 16px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .pdf-fallback a {
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding-top: 220px;
+      }
+
+      .completion-panel {
+        flex-wrap: wrap;
+        max-width: calc(100% - 20px);
+      }
+
+      .instruction-actions {
+        gap: 4px;
+        padding: 0 6px;
+      }
+
+      .level-actions {
+        gap: 3px;
+      }
+
+      .instruction-actions .completion-panel {
+        flex-basis: 100%;
+      }
+
+      .instruction-button {
+        height: 24px;
+        min-height: 24px;
+        padding: 3px 3px;
+        font-size: 8px;
+      }
+
+      .instruction-actions .done-assessment-button {
+        height: 30px;
+        min-height: 30px;
+        padding: 5px 3px;
+        font-size: 10px;
+      }
+
+      .assistance-button {
+        height: 24px;
+        min-height: 24px;
+        padding: 5px 3px;
+        font-size: 8px;
+      }
+
+      .completion-panel {
+        gap: 3px;
+        padding: 0;
+        flex-wrap: nowrap;
+      }
+
+      .completion-panel select {
+        width: 68px;
+        padding: 6px 3px;
+        font-size: 8px;
+      }
+
+      .instruction-button,
+      .done-assessment-button,
+      .assistance-button,
+      .completion-panel select {
+        width: 110px;
+        height: 30px;
+        min-height: 30px;
+        font-size: 10px;
+      }
+
+      .document-viewer {
+        padding: 0 8px;
+      }
+
+      main {
+        padding-top: 14px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="background-shapes" aria-hidden="true">
+    <span class="background-shape shape-one"></span>
+    <span class="background-shape shape-two"></span>
+    <span class="background-shape shape-three"></span>
+    <span class="background-shape shape-four"></span>
+  </div>
+
+  <header class="page-header">
+    <h1>Assessment Instructions</h1>
+    <p>Please select an assessment level to view the instructions. Once you have completed your assessment, click "Done Assessment." If you need assistance, click "Need Assistance."</p>
+    <div class="instruction-actions">
+      <div class="level-actions" role="tablist" aria-label="Assessment instruction levels">
+        <button class="instruction-button active" type="button" data-pdf="level%201.pdf" role="tab" aria-selected="true">Level 1 Assessment</button>
+        <button class="instruction-button" type="button" data-pdf="level%202.pdf" role="tab" aria-selected="false">Level 2 Assessment</button>
+      </div>
+      <button class="done-assessment-button" id="done-assessment-button" type="button">Done Assessment</button>
+      <button class="assistance-button" id="assistance-button" type="button">Need Assistance</button>
+      <div class="completion-panel" aria-label="Assessment completion">
+        <div class="location-seat-stack">
+          <select id="location-select" aria-label="Location selection">
+            <option value="" disabled>Location</option>
+            <option value="Iloilo City" selected>Iloilo City</option>
+            <option value="Bohol">Bohol</option>
+            <option value="Alabang">Alabang</option>
+            <option value="Quezon City">Quezon City</option>
+            <option value="Testing">Testing</option>
+          </select>
+          <label for="seat-select">
+          <select id="seat-select" aria-label="Seat selection">
+          <option>Seat 1</option>
+          <option>Seat 2</option>
+          <option>Seat 3</option>
+          <option>Seat 4</option>
+          <option>Seat 5</option>
+          <option>Seat 6</option>
+          <option>Seat 7</option>
+          <option>Seat 8</option>
+          <option>Seat 9</option>
+          <option>Seat 10</option>
+          <option>Seat 11</option>
+          <option>Seat 12</option>
+          <option>Seat 13</option>
+          <option>Seat 14</option>
+          <option>Seat 15</option>
+          <option>Seat 16</option>
+          <option>Seat 17</option>
+          <option>Seat 18</option>
+          <option>Seat 19</option>
+          <option>Seat 20</option>
+          <option>Seat 21</option>
+          <option>Seat 22</option>
+          <option>Seat 23</option>
+          <option>Seat 24</option>
+          <option>Seat 25</option>
+          <option>Seat 26</option>
+          <option>Seat 27</option>
+          <option>Seat 28</option>
+          <option>Seat 29</option>
+          <option>Seat 30</option>
+          </select>
+          </label>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="notification-wait-popup" id="notificationWaitPopup" role="alert" aria-live="assertive">
+    <button class="notification-wait-close" id="notificationWaitClose" type="button" aria-label="Close notification">&times;</button>
+    <div id="notificationWaitMessage"></div>
+  </div>
+
+  <main>
+    <div class="document-viewer" id="document-viewer" aria-live="polite"></div>
+    <p class="document-status" id="document-status">Loading instructions...</p>
+    <p class="pdf-fallback">PDF not displaying? <a id="pdf-link" href="level%201.pdf" target="_blank" rel="noopener noreferrer">Open the instructions in a new tab</a>.</p>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script type="module">
+    firebase.initializeApp({
+      apiKey: "AIzaSyBZVAXmgE-24AVUFB_7xS4GQi4OwkIvptQ",
+      authDomain: "sagility-assessment.firebaseapp.com",
+      projectId: "sagility-assessment",
+      storageBucket: "sagility-assessment.firebasestorage.app",
+      messagingSenderId: "879192858532",
+      appId: "1:879192858532:web:39e190eb2b130998df6b31",
+      measurementId: "G-QHND2XY4ZR"
+    });
+
+    const audioFirestore = firebase.firestore();
+    const audioAuthReady = firebase.auth().signInAnonymously();
+
+    const documentViewer = document.getElementById("document-viewer");
+    const documentStatus = document.getElementById("document-status");
+    const pdfLink = document.getElementById("pdf-link");
+    const buttons = document.querySelectorAll(".instruction-button");
+    let currentPdfPath = "level%201.pdf";
+    let resizeTimer;
+    let renderRequestId = 0;
+    const locationSelect = document.getElementById("location-select");
+    const seatSelect = document.getElementById("seat-select");
+    const doneAssessmentButton = document.getElementById("done-assessment-button");
+    const assistanceButton = document.getElementById("assistance-button");
+    const notificationWaitPopup = document.getElementById("notificationWaitPopup");
+    const audioNotificationRetentionMs = 48 * 60 * 60 * 1000;
+    const instructionStateKey = "sagility-assessment-instruction-state";
+    let notificationActionLocked = false;
+    let notificationPopupTimer;
+
+    function saveInstructionState() {
+      localStorage.setItem(instructionStateKey, JSON.stringify({
+        location: locationSelect.value,
+        seat: seatSelect.value,
+        pdfPath: currentPdfPath
+      }));
+    }
+
+    function restoreInstructionState() {
+      try {
+        const savedState = JSON.parse(localStorage.getItem(instructionStateKey) || "{}");
+        const hasLocation = Array.from(locationSelect.options).some(option => option.value === savedState.location);
+        const hasSeat = Array.from(seatSelect.options).some(option => option.value === savedState.seat);
+        const savedButton = Array.from(buttons).find(button => button.dataset.pdf === savedState.pdfPath);
+
+        if (hasLocation) {
+          locationSelect.value = savedState.location;
+        }
+        if (hasSeat) {
+          seatSelect.value = savedState.seat;
+        }
+        if (savedButton) {
+          buttons.forEach(button => {
+            const isActive = button === savedButton;
+            button.classList.toggle("active", isActive);
+            button.setAttribute("aria-selected", String(isActive));
+          });
+          pdfLink.href = savedState.pdfPath;
+          return savedState.pdfPath;
+        }
+      } catch (error) {
+        localStorage.removeItem(instructionStateKey);
+      }
+
+      return "level%201.pdf";
+    }
+
+    async function notifyIndex(action) {
+      if (!locationSelect.value) {
+        return;
+      }
+
+      try {
+        await audioAuthReady;
+        await audioFirestore.collection("notificationHistory").add({
+          source: "assessment-audio",
+          action,
+          seat: seatSelect.value,
+          location: locationSelect.value,
+          timestamp: Date.now(),
+          expiresAt: Date.now() + audioNotificationRetentionMs
+        });
+      } catch (error) {
+        console.error("Unable to send assessment notification:", error);
+      }
+    }
+
+    function showNotificationWaitPopup() {
+      document.getElementById("notificationWaitMessage").textContent = "Please wait. Your notification is being sent to the Test Admin. Please do not click again.";
+      notificationWaitPopup.classList.add("visible");
+      window.clearTimeout(notificationPopupTimer);
+      notificationPopupTimer = window.setTimeout(() => {
+        closeNotificationWaitPopup();
+      }, 10000);
+    }
+
+    function closeNotificationWaitPopup() {
+      window.clearTimeout(notificationPopupTimer);
+      notificationWaitPopup.classList.remove("visible");
+      doneAssessmentButton.disabled = false;
+      assistanceButton.disabled = false;
+      notificationActionLocked = false;
+    }
+
+    async function handleAssessmentAction(action, button) {
+      if (notificationActionLocked || button.disabled) {
+        return;
+      }
+
+      notificationActionLocked = true;
+      button.disabled = true;
+      doneAssessmentButton.disabled = true;
+      assistanceButton.disabled = true;
+      showNotificationWaitPopup();
+      await notifyIndex(action);
+    }
+
+    doneAssessmentButton.addEventListener("click", () => {
+      handleAssessmentAction("Done Assessment", doneAssessmentButton);
+    });
+
+    assistanceButton.addEventListener("click", () => {
+      handleAssessmentAction("Need Assistance", assistanceButton);
+    });
+    document.getElementById("notificationWaitClose").addEventListener("click", closeNotificationWaitPopup);
+
+    locationSelect.addEventListener("change", saveInstructionState);
+    seatSelect.addEventListener("change", saveInstructionState);
+
+    async function renderDocument(pdfPath) {
+      const requestId = ++renderRequestId;
+      currentPdfPath = pdfPath;
+      const frame = document.createElement("iframe");
+      frame.className = "document-frame";
+      frame.title = "Assessment instructions";
+      frame.src = `${pdfPath}#toolbar=0&navpanes=0&view=FitH`;
+      documentViewer.replaceChildren(frame);
+      documentStatus.textContent = "Loading instructions...";
+
+      frame.addEventListener("load", () => {
+        if (requestId === renderRequestId) {
+          documentStatus.textContent = "";
+        }
+      }, { once: true });
+      frame.addEventListener("error", () => {
+        if (requestId === renderRequestId) {
+          documentStatus.textContent = "The instructions could not be displayed here. Use the link below to open the PDF.";
+        }
+      }, { once: true });
+    }
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const pdfPath = button.dataset.pdf;
+        pdfLink.href = pdfPath;
+        renderDocument(pdfPath);
+
+        buttons.forEach((item) => {
+          const isActive = item === button;
+          item.classList.toggle("active", isActive);
+          item.setAttribute("aria-selected", String(isActive));
+        });
+        saveInstructionState();
+      });
+    });
+
+    window.addEventListener("resize", () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => renderDocument(currentPdfPath), 150);
+    });
+
+    renderDocument(restoreInstructionState());
+  </script>
+</body>
+</html>

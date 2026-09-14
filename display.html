@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment Queue</title>
+  <link rel="stylesheet" href="display.css">
+</head>
+<body class="display-page">
+  <div id="popup" class="popup hidden" aria-live="assertive"></div>
+  <main class="display-shell">
+    <section class="room-panel">
+      <div class="room-title">TESTING ROOM</div>
+      <label class="location-bubble">
+        <span>Location</span>
+        <select id="displayLocationSelect" aria-label="Display location">
+          <option value="" disabled>Select location</option>
+          <option value="Iloilo City">Iloilo City</option>
+          <option value="Quezon City">Quezon City</option>
+          <option value="Alabang">Alabang</option>
+          <option value="Bohol">Bohol</option>
+        </select>
+      </label>
+      <div class="current-call" id="currentCall">
+        <div class="current-label">WAITING FOR TESTING ROOM CALL</div>
+      </div>
+      <div class="call-history" id="callHistory"></div>
+    </section>
+  </main>
+  <script type="module" src="display.js"></script>
+</body>
+</html>

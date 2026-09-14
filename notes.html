@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sagi Notes</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.notes-page {
+      padding-top: 24px;
+      overflow-x: hidden;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .notes-shell {
+      position: relative;
+      z-index: 1;
+      width: min(calc(100% - 24px), 1400px);
+      max-height: calc(100vh - 24px);
+      box-sizing: border-box;
+      margin: 0 auto;
+      padding: 28px;
+      border: 1px solid rgba(129, 176, 220, 0.42);
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: var(--shadow-medium);
+      overflow: hidden;
+    }
+
+    .notes-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .notes-header h1 {
+      margin: 0;
+      color: var(--primary-blue);
+      font-size: 26px;
+    }
+
+    .notes-header p {
+      margin: 4px 0 0;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .notes-header .notes-credit {
+      color: var(--primary-blue);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .notes-logo {
+      width: 150px;
+      height: auto;
+      flex: 0 0 auto;
+      object-fit: contain;
+    }
+
+    .notes-add-button,
+    .notes-save-button,
+    .notes-delete-button {
+      border: 1px solid #79aee8;
+      border-radius: 8px;
+      padding: 6px 10px;
+      color: var(--primary-blue);
+      background: #dceeff;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .notes-add-button {
+      color: #fff;
+      background: #176b4a;
+      border-color: #176b4a;
+      margin-left: auto;
+      width: auto;
+    }
+
+    .notes-delete-button {
+      color: #b4233c;
+      background: #fce7ee;
+      border-color: #ed91aa;
+      padding: 5px 9px;
+      width: auto;
+    }
+
+    .notes-save-button.is-saved {
+      color: #176b4a;
+      background: #dcfce7;
+      border-color: #74c69d;
+    }
+
+    .notes-save-button {
+      color: #155e9b;
+      background: #e0f2fe;
+      border-color: #7dd3fc;
+      padding: 5px 9px;
+      width: auto;
+    }
+
+    .notes-save-button.is-saved {
+      color: #176b4a;
+      background: #dcfce7;
+      border-color: #74c69d;
+    }
+
+    .notes-click-button {
+      color: #6b21a8;
+      background: #f3e8ff;
+      border-color: #c084fc;
+      padding: 5px 9px;
+      width: auto;
+    }
+
+    .notes-click-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .notes-page button.notes-add-button,
+    .notes-page button.notes-click-button,
+    .notes-page button.notes-save-button,
+    .notes-page button.notes-delete-button {
+      width: auto;
+      padding: 5px 9px;
+      border-radius: 7px;
+      font-size: 12px;
+    }
+
+    .notes-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .notes-table {
+      width: 100%;
+      min-width: 620px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      color: var(--primary-blue);
+      font-size: 13px;
+    }
+
+    .notes-table thead,
+    .notes-table tbody,
+    .notes-table tr {
+      width: 100%;
+    }
+
+    .notes-table tbody {
+      display: block;
+      max-height: calc(100vh - 260px);
+      overflow-y: auto;
+    }
+
+    .notes-table thead,
+    .notes-table tbody tr {
+      display: table;
+      table-layout: fixed;
+    }
+
+    .notes-table th,
+    .notes-table td {
+      padding: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .notes-table th {
+      background: #dceeff;
+      font-weight: 700;
+    }
+
+    .notes-table th:first-child,
+    .notes-table td:first-child {
+      width: 80px;
+      text-align: center;
+    }
+
+    .notes-table th:nth-child(2),
+    .notes-table td:nth-child(2) {
+      width: 24%;
+    }
+
+    .notes-table th:nth-child(3),
+    .notes-table td:nth-child(3) {
+      width: 46%;
+    }
+
+    .notes-table input {
+      width: 100%;
+      min-width: 0;
+      padding: 8px 9px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 7px;
+      color: var(--text-dark);
+      background: #fff;
+      font: inherit;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    .notes-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .notes-search-input {
+      width: min(300px, 60%);
+      padding: 6px 9px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 7px;
+      color: var(--text-dark);
+      background: #fff;
+      font: inherit;
+      font-size: 12px;
+    }
+
+    .notes-column-action {
+      width: 88px !important;
+      min-width: 88px;
+      max-width: 88px;
+      padding-left: 4px;
+      padding-right: 4px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .notes-status {
+      min-height: 20px;
+      margin: 14px 0 0;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .notes-status.error {
+      color: #b4233c;
+    }
+
+    @media (max-width: 600px) {
+      body.notes-page {
+        padding-top: 12px;
+      }
+
+      .notes-shell {
+        width: calc(100% - 20px);
+        max-height: calc(100vh - 16px);
+        padding: 16px;
+      }
+
+      .notes-table tbody {
+        max-height: calc(100vh - 230px);
+      }
+
+      .notes-table-wrap {
+        overflow-x: hidden;
+      }
+
+      .notes-table {
+        min-width: 0;
+      }
+
+      .notes-table thead {
+        display: none;
+      }
+
+      .notes-table tbody tr {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        width: 100%;
+        padding: 10px;
+      }
+
+      .notes-table tbody td {
+        width: auto !important;
+        min-width: 0;
+        padding: 0;
+        border-bottom: 0;
+      }
+
+      .notes-table tbody td:first-child,
+      .notes-table tbody td:nth-child(2),
+      .notes-table tbody td:nth-child(3) {
+        grid-column: 1 / -1;
+      }
+
+      .notes-table tbody td:first-child {
+        padding-bottom: 2px;
+      }
+
+      .notes-table tbody td input {
+        width: 100%;
+      }
+
+      .notes-table tbody td button {
+        width: 100% !important;
+        padding-left: 4px;
+        padding-right: 4px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .notes-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .notes-logo {
+        align-self: flex-end;
+      }
+
+      .notes-header h1 {
+        font-size: 22px;
+      }
+
+      .notes-actions {
+        align-items: stretch;
+      }
+
+      .notes-search-input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="notes-page">
+  <main class="notes-shell">
+    <header class="notes-header">
+      <div>
+        <h1>Sagi Notes</h1>
+        <p>Shared notes and assessment links</p>
+        <p class="notes-credit">Created by Richiel Cana</p>
+      </div>
+      <img class="notes-logo" src="logo.png" alt="Sagility">
+    </header>
+
+    <div class="notes-actions">
+      <input id="notesSearchInput" class="notes-search-input" type="search" placeholder="Search data..." aria-label="Search title or link">
+      <button id="addNoteButton" class="notes-add-button" type="button">Add Note</button>
+    </div>
+    <p id="notesStatus" class="notes-status" role="status" aria-live="polite">Loading notes...</p>
+
+    <div class="notes-table-wrap">
+      <table class="notes-table">
+        <thead>
+          <tr><th>No.</th><th>Title</th><th>Link</th><th class="notes-column-action"></th><th class="notes-column-action"></th><th class="notes-column-action"></th></tr>
+        </thead>
+        <tbody id="notesTableBody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="notes.js"></script>
+</body>
+</html>

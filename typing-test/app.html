@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Typing Test – App</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey: 'AIzaSyBZVAXmgE-24AVUFB_7xS4GQi4OwkIvptQ',
+      authDomain: 'sagility-assessment.firebaseapp.com',
+      projectId: 'sagility-assessment',
+      storageBucket: 'sagility-assessment.firebasestorage.app',
+      messagingSenderId: '879192858532',
+      appId: '1:879192858532:web:39e190eb2b130998df6b31'
+    });
+    window.typingFirestore = firebase.firestore();
+    window.typingAuthReady = firebase.auth().signInAnonymously();
+  </script>
+</head>
+<body>
+  <div class="main-layout">
+    <div class="container">
+      <h1>Typing Test</h1>
+      <div id="displayText" class="displayText">Customer service should be a key focus for good businesses. Research shows that customer service truly sets apart a great business from the rest. Companies would not even exist without their customers, no matter if it is B2B or B2C. To keep customers happy, businesses should build a customer first focus and respond to their needs and wants. The value of good customer service is instant. It can quickly turn a one time customer into a lifelong customer with several upsell events. What is even more important to consider is how a good customer experience quickly spreads.</div>
+
+      <div class="typing-shell" id="typingShell">
+        <div id="typingOverlay" class="typing-overlay" aria-hidden="true"></div>
+        <textarea id="typingInput" class="typing-input" spellcheck="false"></textarea>
+      </div>
+
+      <div class="inline-stats">
+        <div>Time: <span id="time">0s</span></div>
+        <div>WPM: <span id="wpm">0</span></div>
+        <div>Accuracy: <span id="accuracy">0%</span></div>
+      </div>
+
+      <div class="button-group">
+        <button id="retakeBtn" class="big-btn" type="button">Retake Test</button>
+        <button id="newApplicantBtn" class="big-btn" type="button">New Applicant Log-in</button>
+        <button id="downloadBtn" class="big-btn hidden" type="button">Download PDF File</button>
+      </div>
+    </div>
+
+    <aside class="right-panel">
+      <div class="result-card" id="resultCard">
+        <div class="result-title">Test Finished!</div>
+        <div class="result-line">Time: <span id="rTime">0s</span></div>
+        <div class="result-line blue">WPM: <span id="rWpm">0</span></div>
+        <div class="result-line blue">Accuracy: <span id="rAcc">0%</span></div>
+      </div>
+
+      <div class="history-panel">
+        <h2>History</h2>
+        <div class="history-table-wrap">
+          <table class="history-table">
+            <thead>
+              <tr><th>No.</th><th>Name</th><th>Location</th><th>Seat</th><th>Date</th><th>Time</th><th>WPM</th><th>Accuracy</th></tr>
+            </thead>
+            <tbody id="historyList"></tbody>
+          </table>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Guard: if no login info, redirect to login
+    (function(){
+      const name = localStorage.getItem('fullName');
+      const seatNumber = localStorage.getItem('seatNumber');
+      if(!name || !seatNumber || !localStorage.getItem('location')){ window.location.replace('login.html'); }
+    })();
+  </script>
+</body>
+</html>

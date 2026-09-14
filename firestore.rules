@@ -1,0 +1,88 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /sentHistory/{recordId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+
+      allow update: if request.auth != null && (
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deleted', 'deletedAt']) &&
+          request.resource.data.deleted == true &&
+          request.resource.data.deletedAt is int
+        ) ||
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['recordId']) &&
+          resource.data.recordId == '' &&
+          request.resource.data.recordId == recordId
+        ) ||
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']) &&
+          request.resource.data.status in ['No Status', 'Done']
+        ) ||
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['candidateNotifiedAt']) &&
+          request.resource.data.candidateNotifiedAt is int
+        )
+      );
+
+      allow delete: if request.auth != null;
+    }
+
+    match /notificationHistory/{recordId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+
+      allow update: if request.auth != null && (
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['recordId']) &&
+          resource.data.recordId == '' &&
+          request.resource.data.recordId == recordId
+        ) ||
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']) &&
+          request.resource.data.status in ['No Status', 'Done']
+        ) ||
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['candidateNotifiedAt']) &&
+          request.resource.data.candidateNotifiedAt is int
+        )
+      );
+
+      allow delete: if request.auth != null;
+    }
+
+    match /assessmentAudioNotifications/{notificationId} {
+      allow read, create: if request.auth != null;
+      allow update, delete: if false;
+    }
+
+    match /sagiNotes/{noteId} {
+      allow read, create: if request.auth != null;
+      allow update: if request.auth != null &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['title', 'link', 'updatedAt']) &&
+        request.resource.data.title is string &&
+        request.resource.data.link is string &&
+        request.resource.data.updatedAt is int;
+      allow delete: if request.auth != null;
+    }
+
+    match /typingResults/{resultId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null &&
+        request.resource.data.name is string &&
+        request.resource.data.seatNumber is string &&
+        request.resource.data.location is string &&
+        request.resource.data.date is string &&
+        request.resource.data.score is int &&
+        request.resource.data.accuracy is int &&
+        request.resource.data.completedAt is int;
+      allow update: if request.auth != null &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deleted', 'deletedAt']) &&
+        request.resource.data.deleted == true &&
+        request.resource.data.deletedAt is int;
+      allow delete: if request.auth != null;
+    }
+  }
+}

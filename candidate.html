@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sagility Assessment Completion</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .candidate-page {
+      min-height: 100vh;
+      height: auto;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      overflow: visible;
+    }
+
+    .candidate-body {
+      padding-top: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .candidate-card {
+      width: min(100%, 520px);
+    }
+
+    .candidate-card .card-header {
+      margin-bottom: 16px;
+    }
+
+    .candidate-card .card-header h2 {
+      font-size: 22px;
+    }
+
+    .candidate-card .packages-subtitle {
+      font-size: 12px;
+    }
+
+    .candidate-completion-note {
+      margin: 0 0 18px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .candidate-completion-note p {
+      margin: 0 0 8px;
+    }
+
+    .candidate-completion-note a {
+      color: var(--accent-blue);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .candidate-completion-note a:hover {
+      text-decoration: underline;
+    }
+
+    .candidate-card .card-header .card-icon {
+      color: var(--accent-blue);
+    }
+
+    .candidate-submit-btn {
+      width: 100%;
+      margin-top: 4px;
+      padding: 10px 16px;
+      border: 1px solid #176b4a;
+      border-radius: 8px;
+      background: #176b4a;
+      color: #fff;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .candidate-submit-btn:disabled {
+      cursor: wait;
+      opacity: 0.7;
+    }
+
+    .candidate-status {
+      min-height: 20px;
+      margin: 12px 0 0;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .candidate-status.success { color: #176b4a; }
+    .candidate-status.error { color: #b4233c; }
+  </style>
+</head>
+<body class="candidate-body">
+  <main class="candidate-page">
+    <section class="card candidate-card">
+      <div class="card-header">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <h2>Sagility Assessment Completion</h2>
+      </div>
+
+      <div class="candidate-completion-note">
+        <p>If you have completed your assessment, please enter your personal information. This will notify our Test Admin that you have finished your assessment.</p>
+        <p>For other concerns, questions, or assistance, please contact:</p>
+        <a href="mailto:PHLTestAdmin@Sagilityhealth.com">PHLTestAdmin@Sagilityhealth.com</a>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="candidateNameInput">Name</label>
+        <input id="candidateNameInput" type="text" autocomplete="name" placeholder="Name">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="candidateEmailInput">Email</label>
+        <input id="candidateEmailInput" type="email" autocomplete="email" placeholder="Email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="candidateLocationInput">Location</label>
+        <select id="candidateLocationInput" required>
+          <option value="" disabled selected hidden>Select Location</option>
+          <option>Iloilo City</option>
+          <option>Bohol</option>
+          <option>Alabang</option>
+          <option>Quezon City</option>
+        </select>
+      </div>
+
+      <button id="notifyCompleteBtn" class="candidate-submit-btn" type="button">Send Notification</button>
+      <p id="candidateStatus" class="candidate-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: 'AIzaSyBZVAXmgE-24AVUFB_7xS4GQi4OwkIvptQ',
+      authDomain: 'sagility-assessment.firebaseapp.com',
+      projectId: 'sagility-assessment',
+      storageBucket: 'sagility-assessment.firebasestorage.app',
+      messagingSenderId: '879192858532',
+      appId: '1:879192858532:web:39e190eb2b130998df6b31',
+      measurementId: 'G-QHND2XY4ZR'
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const firestore = firebase.firestore();
+    const firebaseAuthReady = firebase.auth().signInAnonymously();
+
+    function normalize(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    document.getElementById('notifyCompleteBtn').addEventListener('click', async () => {
+      const button = document.getElementById('notifyCompleteBtn');
+      const status = document.getElementById('candidateStatus');
+      const name = document.getElementById('candidateNameInput').value.trim();
+      const email = document.getElementById('candidateEmailInput').value.trim();
+      const location = document.getElementById('candidateLocationInput').value.trim();
+
+      if (!name || !email || !location) {
+        status.textContent = 'Please complete your name, email, and location.';
+        status.className = 'candidate-status error';
+        return;
+      }
+
+      button.disabled = true;
+      status.textContent = 'Sending notification...';
+      status.className = 'candidate-status';
+
+      try {
+        await firebaseAuthReady;
+        const timestamp = Date.now();
+        const recordRef = await firestore.collection('sentHistory').add({
+          date: new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' }),
+          dateKey: new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' }),
+          timestamp,
+          name,
+          email,
+          location,
+          source: 'candidate-notification',
+          status: 'No Status',
+          statusUpdatedAt: timestamp,
+          completedAt: null,
+          candidateNotifiedAt: timestamp,
+          deleted: false,
+          deletedAt: null,
+          recordId: ''
+        });
+        await recordRef.update({ recordId: recordRef.id });
+        status.textContent = 'Notification sent successfully.';
+        status.className = 'candidate-status success';
+      } catch (error) {
+        status.textContent = error.code === 'permission-denied'
+          ? 'Permission denied. Publish the updated Firestore rules, then try again.'
+          : (error.message || 'Unable to send notification. Please try again.');
+        status.className = 'candidate-status error';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
