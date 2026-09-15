@@ -68,57 +68,129 @@
       <h1>ASSESSMENT PH <span>PORTAL</span></h1>
       <p>This tool is designed for remote and virtual assessments. It is intended for internal use only. Only authorized Sagility Test Admin are permitted to use this tool.</p>
       <p class="header-credit">Created by Richiel Caña</p>
+      <a id="adminLogoutLink" class="admin-logout-link" href="#">Admin Log-out</a>
     </div>
-    <div class="header-controls">
-      <button id="logoutBtn" class="logout-btn" type="button" aria-label="Log out">
+    <nav>
+      <a href="#reports">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M10 17l5-5-5-5"></path>
-          <path d="M15 12H3"></path>
-          <path d="M21 3v18"></path>
+          <path d="M4 19V5"></path>
+          <path d="M4 19h16"></path>
+          <path d="m7 15 3-4 3 2 5-6"></path>
         </svg>
-        Log out
-      </button>
-      <nav>
-        <details class="resource-menu">
-        <summary>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-          Resources
-        </summary>
-        <div class="resource-menu-panel">
-          <button class="resource-menu-close" id="closeResourceMenu" type="button" aria-label="Close resources"><span aria-hidden="true">&times;</span></button>
-          <a href="sagilityhiringfiles/index.html" target="_blank" rel="noopener noreferrer">Sagility Files</a>
-          <a href="candidate.html" target="_blank" rel="noopener noreferrer">Candidate Login</a>
-          <a href="notes.html" target="_blank" rel="noopener">Sagi Notes</a>
-          <a id="typingTestLink" href="./typing-test/index.html" target="_blank" rel="noopener noreferrer">Typing Test</a>
-        </div>
-        </details>
-        <div class="location-control-wrap">
-          <div id="locationReminderBubble" class="typing-chart-hint location-reminder-bubble" role="status">Please note: choose your location</div>
-          <select class="header-location-select" id="headerLocationSelect" aria-label="Select location" autocomplete="off">
-            <option value="" disabled hidden selected>Location</option>
-            <option value="Iloilo City">Iloilo City</option>
-            <option value="Bohol">Bohol</option>
-            <option value="Alabang">Alabang</option>
-            <option value="Quezon City">Quezon City</option>
-            <option value="Testing">Testing</option>
-          </select>
-        </div>
-      </nav>
-    </div>
+        Reports
+      </a>
+      <a href="#notificationReport">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        Candidates Status
+      </a>
+      <a href="candidate.html" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        Candidate Login
+      </a>
+      <a href="#seatManager">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+          <path d="M8 8h8M8 12h8M8 16h4"></path>
+        </svg>
+        Seat Manager
+      </a>
+      <a href="https://sagilityassessment-cmyk.github.io/sagilityhiringfiles/home.html" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M4 5h16v14H4z"></path>
+          <path d="M8 9h8M8 13h5"></path>
+        </svg>
+        Sagility Files
+      </a>
+      <a href="assessment-instructions.html" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M6 3h9l3 3v15H6z"></path>
+          <path d="M9 11h6M9 15h6M9 7h3"></path>
+        </svg>
+        Assessment Instructions
+      </a>
+      <a href="notes.html" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M5 4h14v16H5z"></path>
+          <path d="M8 8h8M8 12h8M8 16h5"></path>
+        </svg>
+        Notes
+      </a>
+      <a id="typingTestLink" href="./typing-test/index.html" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+          <path d="M7 9h1M11 9h1M15 9h1M7 13h10"></path>
+        </svg>
+        Typing Test
+      </a>
+      <div class="location-control-wrap">
+        <div id="locationReminderBubble" class="typing-chart-hint location-reminder-bubble" role="status">Please note: choose your location</div>
+        <select class="header-location-select" id="headerLocationSelect" aria-label="Select location" autocomplete="off">
+          <option value="" disabled hidden selected>Location</option>
+          <option value="Iloilo City">Iloilo City</option>
+          <option value="Bohol">Bohol</option>
+          <option value="Alabang">Alabang</option>
+          <option value="Quezon City">Quezon City</option>
+          <option value="Testing">Testing</option>
+        </select>
+      </div>
+    </nav>
+    <button id="logoutBtn" class="logout-btn" type="button" aria-label="Log out">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M10 17l5-5-5-5"></path>
+        <path d="M15 12H3"></path>
+        <path d="M21 3v18"></path>
+      </svg>
+      Log out
+    </button>
   </header>
 
   <script>
-    document.getElementById('logoutBtn').addEventListener('click', () => {
+    const ADMIN_LOGOUT_PASSWORD = 'Sagility_1';
+    const LOGOUT_BROADCAST_KEY = 'sagility-admin-logout';
+    const GLOBAL_LOGOUT_DOCUMENT = 'portalControl/session';
+
+    async function logOutPortal(broadcast = true, updateGlobalSession = true) {
       localStorage.removeItem('sagility-assessment-state');
       localStorage.removeItem('sagility-selected-location');
+      if (broadcast) {
+        localStorage.setItem(LOGOUT_BROADCAST_KEY, String(Date.now()));
+      }
+      if (updateGlobalSession && typeof firestore !== 'undefined') {
+        await firestore.doc(GLOBAL_LOGOUT_DOCUMENT).set({
+          logoutAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true }).catch(() => {});
+      }
       sessionStorage.clear();
+      if (typeof portalAuth !== 'undefined') {
+        await portalAuth.signOut().catch(() => {});
+      }
       window.location.replace('./index.html');
-    });
+    }
 
-    document.getElementById('closeResourceMenu').addEventListener('click', () => {
-      document.querySelector('.resource-menu').open = false;
+    function requestAdminLogout(event) {
+      event.preventDefault();
+      const password = window.prompt('Enter the admin logout password:');
+      if (password === ADMIN_LOGOUT_PASSWORD) {
+        logOutPortal();
+      } else if (password !== null) {
+        window.alert('Incorrect admin logout password.');
+      }
+    }
+
+    document.getElementById('adminLogoutLink').addEventListener('click', requestAdminLogout);
+    document.getElementById('logoutBtn').addEventListener('click', requestAdminLogout);
+    window.addEventListener('storage', event => {
+      if (event.key === LOGOUT_BROADCAST_KEY && event.newValue) {
+        logOutPortal(false);
+      }
     });
   </script>
 
@@ -169,6 +241,7 @@
           <option>Quezon City</option>
           <option>Testing</option>
         </select>
+        <button id="clearDataBtn" class="clear-data-btn" type="button">Clear Data</button>
       </div>
     </section>
 
@@ -216,26 +289,16 @@
         <div class="preview-email-action">
           <p id="emailStatus" class="email-status" role="status" aria-live="polite"></p>
           <button id="sendEmailBtn" class="send-email-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 6l2.29 2.29-4.29 4.29 4.29 4.29L16 18l-6-6 6-6z"></path>
+              <rect x="2" y="4" width="20" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+            </svg>
             Send Email
           </button>
         </div>
         <input id="recentHistorySearchInput" type="hidden">
         <ol id="recentSentHistoryList" hidden></ol>
         <button id="deleteRecentHistoryBtn" type="button" hidden disabled>Delete</button>
-      </section>
-
-      <section id="assessmentEmailQueue" class="card assessment-email-queue" aria-labelledby="assessmentEmailQueueTitle">
-        <div class="card-header">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
-            <path d="m3 7 9 6 9-6"></path>
-          </svg>
-          <h2 id="assessmentEmailQueueTitle">Email Queue</h2>
-          <span id="assessmentEmailQueueCount" class="assessment-email-queue-count">0</span>
-        </div>
-        <div id="assessmentEmailQueueList" class="assessment-email-queue-list" aria-live="polite">
-          <p class="assessment-email-queue-empty">No emails in the queue.</p>
-        </div>
       </section>
 
     </div>
@@ -909,6 +972,23 @@
       }
       await firebase.auth().currentUser.getIdToken(true);
     }
+
+    async function watchGlobalPortalLogout() {
+      try {
+        await ensureFirebaseAuth();
+        firestore.doc(GLOBAL_LOGOUT_DOCUMENT).onSnapshot(snapshot => {
+          if (sessionStorage.getItem(portalSessionKey) !== 'true') return;
+          const logoutAt = snapshot.data()?.logoutAt;
+          const sessionStartedAt = Number(sessionStorage.getItem(portalSessionStartedKey));
+          if (logoutAt?.toMillis && logoutAt.toMillis() > sessionStartedAt) {
+            logOutPortal(false, false);
+          }
+        });
+      } catch {
+      }
+    }
+
+    watchGlobalPortalLogout();
 
     const LOCAL_STORAGE_KEY = 'sagility-assessment-state';
     const HISTORY_DELETE_KEY = 'sagility-assessment-hidden-history';
@@ -2162,78 +2242,16 @@
     document.querySelectorAll('.package-checkbox').forEach(checkbox => checkbox.addEventListener('change', renderEmailPreview));
     renderEmailPreview();
 
-    const assessmentEmailQueue = [];
-    let assessmentEmailQueueRunning = false;
-    const assessmentEmailQueueDelayMs = 2000;
-
-    function renderAssessmentEmailQueue() {
-      const list = document.getElementById('assessmentEmailQueueList');
-      const count = document.getElementById('assessmentEmailQueueCount');
-      if (!list || !count) return;
-
-      count.textContent = String(assessmentEmailQueue.length);
-      list.innerHTML = assessmentEmailQueue.length
-        ? [...assessmentEmailQueue].reverse().map(item => `
-          <div class="assessment-email-queue-item ${item.status}">
-            <div class="assessment-email-queue-item-main">
-              <strong>${escapeHtml(item.name)}</strong>
-              <span>${escapeHtml(item.email)} - ${escapeHtml(item.location)}</span>
-            </div>
-            <span class="assessment-email-queue-status">${escapeHtml(item.statusLabel)}</span>
-          </div>`).join('')
-        : '<p class="assessment-email-queue-empty">No emails in the queue.</p>';
-    }
-
-    function enqueueAssessmentEmail(payload) {
-      assessmentEmailQueue.push({
-        ...payload,
-        status: 'pending',
-        statusLabel: 'Pending'
-      });
-      renderAssessmentEmailQueue();
-      processAssessmentEmailQueue();
-    }
-
-    async function processAssessmentEmailQueue() {
-      if (assessmentEmailQueueRunning) return;
-      assessmentEmailQueueRunning = true;
-
-      while (assessmentEmailQueue.some(item => item.status === 'pending')) {
-        const queueItem = assessmentEmailQueue.find(item => item.status === 'pending');
-        queueItem.status = 'sending';
-        queueItem.statusLabel = 'Sending';
-        renderAssessmentEmailQueue();
-
-        try {
-          await sendAssessmentEmail(queueItem);
-          queueItem.status = 'success';
-          queueItem.statusLabel = 'Successfully sent';
-        } catch (error) {
-          console.error('Assessment email queue item failed:', error);
-          queueItem.status = 'error';
-          queueItem.statusLabel = 'Failed';
-        }
-
-        renderAssessmentEmailQueue();
-        if (assessmentEmailQueue.some(item => item.status === 'pending')) {
-          await new Promise(resolve => window.setTimeout(resolve, assessmentEmailQueueDelayMs));
-        }
-      }
-
-      assessmentEmailQueueRunning = false;
-      renderAssessmentEmailQueue();
-    }
-
-    async function sendAssessmentEmail(queuedPayload = null) {
+    document.getElementById('sendEmailBtn').addEventListener('click', async () => {
       const sendButton = document.getElementById('sendEmailBtn');
       const emailStatus = document.getElementById('emailStatus');
-      const candidateName = queuedPayload?.candidateName ?? document.getElementById('candidateNameInput').value.trim();
-      const recipient = queuedPayload?.email ?? document.getElementById('emailInput').value.trim();
-      const location = queuedPayload?.location ?? document.getElementById('locationInput').value.trim();
-      const isRetake = queuedPayload?.isRetake ?? document.getElementById('retakeCheckbox').checked;
-      const isFollowUp = queuedPayload?.isFollowUp ?? document.getElementById('followAssessmentCheckbox').checked;
+      const candidateName = document.getElementById('candidateNameInput').value.trim();
+      const recipient = document.getElementById('emailInput').value.trim();
+      const location = document.getElementById('locationInput').value.trim();
+      const isRetake = document.getElementById('retakeCheckbox').checked;
+      const isFollowUp = document.getElementById('followAssessmentCheckbox').checked;
       const selectedPackages = getOrderedSelectedPackageCheckboxes();
-      const packages = queuedPayload?.packages ?? selectedPackages.map(checkbox => ({
+      const packages = selectedPackages.map(checkbox => ({
         name: checkbox.dataset.package,
         url: checkbox.dataset.url
       }));
@@ -2252,16 +2270,6 @@
       }
 
       const payload = { name: candidateName, email: recipient, location, packages, isRetake, isFollowUp };
-      if (!queuedPayload) {
-        enqueueAssessmentEmail(payload);
-        document.getElementById('candidateNameInput').value = '';
-        document.getElementById('emailInput').value = '';
-        renderEmailPreview();
-        emailStatus.textContent = 'Queued for sending. You can enter the next candidate.';
-        emailStatus.className = 'email-status sending';
-        return;
-      }
-
       sendButton.disabled = true;
       emailStatus.textContent = 'Sending Assessment...........';
       emailStatus.className = 'email-status sending';
@@ -2318,10 +2326,30 @@
       emailStatus.textContent = 'Email draft opened.';
       emailStatus.className = 'email-status success';
       sendButton.disabled = false;
-    }
+    });
 
-    document.getElementById('sendEmailBtn').addEventListener('click', () => {
-      sendAssessmentEmail();
+    document.getElementById('clearDataBtn').addEventListener('click', () => {
+      document.getElementById('candidateNameInput').value = '';
+      document.getElementById('emailInput').value = '';
+      document.getElementById('locationInput').selectedIndex = 0;
+      headerLocationSelect.value = '';
+      localStorage.removeItem(LOCATION_STORAGE_KEY);
+      document.getElementById('retakeCheckbox').checked = false;
+      document.getElementById('followAssessmentCheckbox').checked = false;
+      document.querySelectorAll('.package-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+        updatePackageItemUI(checkbox);
+      });
+      sentHistoryRecords = [];
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+      persistHiddenHistoryKeys([]);
+      document.getElementById('emailStatus').textContent = '';
+      document.getElementById('emailStatus').className = 'email-status';
+      updateSelectedPackages();
+      renderSentHistory(document.getElementById('historySearchInput').value);
+      renderRecentSentHistory(document.getElementById('recentHistorySearchInput').value);
+      renderReports();
+      alert('Data cleared successfully.');
     });
 
     document.querySelector('.clear-data-action').addEventListener('click', () => {
