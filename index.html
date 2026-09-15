@@ -185,8 +185,12 @@
       }
     }
 
+    function requestLocalLogout() {
+      logOutPortal(false, false);
+    }
+
     document.getElementById('adminLogoutLink').addEventListener('click', requestAdminLogout);
-    document.getElementById('logoutBtn').addEventListener('click', requestAdminLogout);
+    document.getElementById('logoutBtn').addEventListener('click', requestLocalLogout);
     window.addEventListener('storage', event => {
       if (event.key === LOGOUT_BROADCAST_KEY && event.newValue) {
         logOutPortal(false);
