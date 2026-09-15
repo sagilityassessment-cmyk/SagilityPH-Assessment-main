@@ -1,0 +1,811 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sagility Files</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    margin: 0;
+    padding: 160px 0 0;
+    text-align: center;
+    background-color: #cfe9fb;
+    background-image:
+        linear-gradient(135deg, rgba(255,255,255,.38) 25%, transparent 25%),
+        linear-gradient(315deg, rgba(151,201,239,.3) 25%, transparent 25%),
+        linear-gradient(180deg, #bfe0f7 0%, #eaf7ff 100%);
+    background-size: 420px 420px, 520px 520px, 100% 100%;
+    background-attachment: fixed;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    width: 100%;
+    margin: 0;
+    padding: 8px 18px 10px;
+    box-sizing: border-box;
+    background: rgba(207, 233, 251, .94);
+    backdrop-filter: blur(8px);
+    border-bottom: 3px solid #28b77b;
+}
+
+.creator {
+    margin: 4px 0 0;
+    font-size: 15px;
+    color: #244b78;
+    text-align: left;
+}
+
+img.logo {
+    max-width: 175px;
+    display: block;
+    flex: 0 0 175px;
+    margin: 0;
+}
+
+.header-copy {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 10px 16px;
+    border: 1px solid #83b9ed;
+    border-radius: 12px;
+    background: rgba(215, 235, 255, .86);
+    text-align: left;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #245596;
+    margin: 0;
+}
+
+.header-details {
+    min-width: 0;
+}
+
+.search-form {
+    display: flex;
+    flex: 0 1 520px;
+    gap: 8px;
+}
+
+.search-form input {
+    width: 100%;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 1px solid #83b9ed;
+    border-radius: 7px;
+    background: rgba(255, 255, 255, .9);
+    color: #173f73;
+    font: inherit;
+}
+
+.search-form button {
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 7px;
+    background: #20b878;
+    color: white;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background: #168d5c;
+}
+
+.search-status {
+    min-width: 72px;
+    color: #245596;
+    font-size: 12px;
+    text-align: right;
+}
+
+.search-match {
+    outline: 4px solid #ffd166;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px rgba(255, 209, 102, .28);
+}
+
+h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 30px auto 20px auto;
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: inline-block;
+    min-width: 300px;
+    color: #1B5E20;
+}
+
+.preemp-layout {
+    max-width: 1240px;
+    margin: 0 auto 30px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
+.preemp-panel {
+    flex: 1 1 0;
+    border: 2px solid #2d9d64;
+    background: rgba(196, 232, 203, 0.22);
+    padding: 0 12px 12px;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.preemp-header {
+    display: block;
+    background: #1B5E20;
+    color: white;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 800;
+    padding: 12px 20px;
+    margin: 0 -12px 12px;
+    letter-spacing: 0.5px;
+}
+
+.preemp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.preemp-grid .column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.preemp-grid .btn {
+    width: 100%;
+    max-width: none;
+    min-height: 58px;
+}
+
+.workday-panel {
+    flex: 0 1 260px;
+    max-width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.workday-panel .orange-btn,
+.workday-panel .super-light-orange-btn {
+    width: 100%;
+    max-width: none;
+    min-height: 54px;
+}
+
+.assessment-grid .column .btn:nth-child(n + 2) {
+    height: 125px;
+    box-sizing: border-box;
+    font-size: 14px;
+    line-height: 1.2;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    text-align: left;
+    padding-left: 14px;
+}
+
+.government-grid .btn {
+    height: 54px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.sagility-grid .column:nth-child(-n + 2) .lightblue-btn {
+    height: 45px;
+    box-sizing: border-box;
+}
+
+.sagility-grid .column:nth-child(3) .lightblue-btn {
+    height: 125px;
+    box-sizing: border-box;
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+.sagility-grid .standalone-blue-btn {
+    height: 64px;
+    box-sizing: border-box;
+}
+
+.assessment-level {
+    display: table;
+    max-width: 100%;
+    margin: 0 auto 4px;
+    padding: 2px 10px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .55);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.assessment-details {
+    display: block;
+}
+
+.section {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+@media (min-width: 1001px) {
+    body {
+        padding-top: 115px;
+    }
+
+    h2 {
+        margin-top: 12px;
+    }
+
+    .assessment-grid {
+        gap: 14px;
+    }
+
+    .assessment-grid .btn {
+        width: 230px;
+        max-width: 230px;
+    }
+}
+
+@media (min-width: 701px) and (max-width: 1000px) {
+    body {
+        padding-top: 112px;
+    }
+
+    .header {
+        gap: 16px;
+        padding: 7px 14px 9px;
+    }
+
+    img.logo {
+        flex-basis: 140px;
+        max-width: 140px;
+    }
+
+    .header-copy {
+        gap: 14px;
+        padding: 8px 12px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .preemp-layout {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .preemp-panel {
+        width: auto;
+        flex: 1 1 auto;
+    }
+
+    .workday-panel {
+        flex: 0 1 250px;
+        width: auto;
+        max-width: 250px;
+    }
+
+    .section {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 15px;
+        padding: 0 20px;
+    }
+
+    .section .column {
+        min-width: 0;
+    }
+
+    .section .btn {
+        width: 100%;
+        max-width: none;
+    }
+}
+
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn {
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    width: 260px;
+    padding: 10px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.green-btn { background-color: #C8E6C9; color: #1B5E20; border: 2px solid #20b878; }
+.orange-btn { background-color: #FF6F00; color: white; }
+.blue-btn { background-color: #90CAF9; color: #1A2E81; border: 2px solid #1A2E81; }
+
+.maroon-btn { background-color: #800020; color: white; }
+.dark-red-btn { background-color: #8B0000; color: white; }
+.dark-green-btn { background-color: #1B5E20; color: white; }
+.dark-grey-btn { background-color: #424242; color: white;}
+.dark-yellow-btn { background-color: #C49000; color: white;}
+
+.lightblue-btn { background-color: #ADD8E6; color: #1A2E81; border: 2px solid #1A2E81; }
+.gov-light-btn { background-color: #B7DCEB; color: #163B8F; border: 2px solid #163B8F; }
+.standalone-blue-btn { background-color: #1A2E81; color: white; border: 2px solid #1A2E81; }
+.light-pink-btn { background-color: #FFE4E8; color: #800020; border: 2px solid #8B1E3F; }
+.light-grey-btn { background-color: #E0E0E0; color: #333; border: 2px solid #424242;}
+
+.super-light-orange-btn { background-color: #FFF3E0; color: #6D4C41; border: 2px solid #9C6B4B; }
+.super-light-green-btn { background-color: #E8F5E9; color: #1B5E20; border: 2px solid #1B5E20; }
+.teal-btn { background-color: #7FD8D8; color: black; border: 2px solid #1B5E20; }
+
+.dark-purple-btn {background-color: #64185D; color: white;}
+
+.light-purple-btn {background-color: #D5B6D5;color: #5F3A6E; border: 2px solid #7E4B7A;}
+
+.btn:link,
+.btn:visited {
+    text-decoration: none;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 700px) {
+    body {
+        padding-top: 0;
+    }
+
+    .header {
+        position: sticky;
+        top: 0;
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 14px;
+    }
+
+    img.logo {
+        flex-basis: auto;
+        max-width: 150px;
+    }
+
+    .header-copy {
+        display: block;
+        width: 100%;
+        padding: 14px 16px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    h2 {
+        font-size: 20px;
+        margin: 20px auto 15px auto;
+        padding: 8px 12px;
+        border-radius: 8px;
+        display: inline-block;
+        min-width: 200px;
+        color: #1B5E20;
+    }
+
+    .section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 25px;
+        padding: 0 6px;
+    }
+
+    .preemp-layout {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 5%;
+        padding: 0 6px;
+    }
+
+    .preemp-panel {
+        flex: none;
+        width: 100%;
+        padding: 0 6px 8px;
+    }
+
+    .workday-panel {
+        flex: none;
+        width: 40%;
+        max-width: 100%;
+        margin: 0;
+        align-self: center;
+    }
+
+    .workday-panel .orange-btn,
+    .workday-panel .super-light-orange-btn {
+        min-height: 38px;
+        padding: 6px 4px;
+        font-size: 12px;
+    }
+
+    .preemp-header {
+        margin: 0 -6px 8px;
+        padding: 8px 10px;
+        font-size: 18px;
+    }
+
+    .preemp-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px 6px;
+    }
+
+    .preemp-grid .column {
+        gap: 6px;
+        min-width: 0;
+    }
+
+    .preemp-grid .btn {
+        min-height: 38px;
+        padding: 4px 2px;
+        font-size: 7px;
+        overflow-wrap: anywhere;
+    }
+
+    .column {
+        gap: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .section .btn {
+        width: 100%;
+        max-width: none;
+    }
+
+    .sagility-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        padding: 0 4px;
+    }
+
+    .other-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        padding: 0 4px;
+    }
+
+    .sagility-grid .column {
+        gap: 8px;
+    }
+
+    .sagility-grid .column:nth-child(-n + 2) .lightblue-btn {
+        height: 38px;
+        padding: 4px 2px;
+        font-size: 8px;
+    }
+
+    .sagility-grid .standalone-blue-btn {
+        height: 48px;
+        padding: 4px 2px;
+        font-size: 8px;
+    }
+
+    .sagility-grid .column:nth-child(3) .lightblue-btn {
+        height: 88px;
+        padding: 4px 2px;
+        font-size: 8px;
+        line-height: 1.1;
+    }
+
+    .government-grid .btn {
+        height: auto;
+        font-size: 10px;
+    }
+
+    .assessment-grid .column .btn:nth-child(n + 2) {
+        height: 112px;
+        min-height: 0;
+        padding: 5px 7px;
+        font-size: 10px;
+        line-height: 1.1;
+    }
+
+    .assessment-grid .assessment-level {
+        margin-bottom: 2px;
+        padding: 1px 7px;
+    }
+
+    .btn {
+        font-size: 10px;
+        width: 95%;
+        max-width: 150px;
+        padding: 6px 4px;
+        line-height: 1.2;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+
+    .search-form {
+        margin-top: 12px;
+        max-width: none;
+    }
+
+    .search-status {
+        display: none;
+    }
+
+    .creator {
+        font-size: 12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<img alt="Sagility Logo" class="logo" src="logo.png"/>
+<div class="header-copy">
+<div class="header-details">
+<h1>SAGILITY FILES</h1>
+<p class="creator">Created by Richiel Caña</p>
+</div>
+<form class="search-form" id="search-form" role="search">
+<input id="site-search" type="search" placeholder="Search files or sections" aria-label="Search files or sections" autocomplete="off"/>
+<button type="submit">Search</button>
+<span class="search-status" id="search-status" aria-live="polite"></span>
+</form>
+</div>
+</div>
+<!-- Pre-Employment Files Section -->
+<div class="preemp-layout">
+  <div class="preemp-panel">
+    <div class="preemp-header">PRE-EMPLOYMENT FORMS</div>
+    <div class="preemp-grid">
+      <div class="column">
+        <a class="green-btn btn" href="https://phsagility.github.io/Sagility-Generic-Forms/" rel="noopener noreferrer" target="_blank">Generic Forms</a>
+        <a class="green-btn btn" href="https://phsagility.github.io/Sagility-Generic-Forms-with-Vanguard/" rel="noopener noreferrer" target="_blank">Generic Forms with Vanguard</a>
+        <a class="green-btn btn" href="https://phsagility.github.io/Sagility-Generic-Forms-Desert-Radiology/" rel="noopener noreferrer" target="_blank">Generic Forms for Desert Radiology</a>
+        <a class="green-btn btn" href="https://phsagility.github.io/Generic-Forms-Qualynx/" rel="noopener noreferrer" target="_blank">Generic Forms for Qualynx</a>
+        <a class="green-btn btn" href="https://phsagility.github.io/Generic-Forms-Apria/" rel="noopener noreferrer" target="_blank">Generic Forms for Apria</a>
+      </div>
+      <div class="column">
+        <a class="green-btn btn" href="https://phsagility.github.io/Sagility-Vanguard-Forms/" rel="noopener noreferrer" target="_blank">Vanguard Forms</a>
+        <a class="green-btn btn" href="https://phsagility.github.io/Sagility-WFH-Forms/" rel="noopener noreferrer" target="_blank">WAH Capability Forms</a>
+        <a class="green-btn btn" href="https://phsagility.github.io/Sagility-Workday-Forms/" rel="noopener noreferrer" target="_blank">Workday Forms</a>
+        <a class="green-btn btn" href="https://phsagility.github.io/Sagility-Teleworking-and-Acceptable-Forms/" rel="noopener noreferrer" target="_blank">Teleworking and Acceptable Forms</a>
+        <a class="green-btn btn" href="https://phsagility.github.io/Sagility-New-Hire-Pay-Scheme---Acknowledgment-Form/" rel="noopener noreferrer" target="_blank">Acknowledgement Form</a>
+      </div>
+      <div class="column">
+        <a class="green-btn btn" href="https://forms.office.com/pages/responsepage.aspx?id=JFF0wKSECUm7lTB61aiuFeHqR-1YsvVIuafkfqeHFm5UNzNERlgzNlFKVUtTTDFBNzFYUkQ4WVYzQSQlQCN0PWcu&amp;route=shorturl" rel="noopener noreferrer" target="_blank">RNCF Forms</a>
+        <a class="green-btn btn" href="https://drive.google.com/file/d/15a-CARTfIL3rk3MwbUTre8ZHNFxAceKV/view" rel="noopener noreferrer" target="_blank">PRE-EMPLOYMENT CHECKLIST</a>
+        <a class="green-btn btn" href="https://drive.google.com/file/d/1ta9KpGjiflU3Xo62wgPGvIM3Yyn_xVCu/view?usp=drive_link" rel="noopener noreferrer" target="_blank">UNIONBANK</a>
+        <a class="green-btn btn" href="https://phsagility.github.io/Sagility-Generic-Forms-Intern/" rel="noopener noreferrer" target="_blank">Generic Forms for INTERN</a>
+        <a class="green-btn btn" href="https://phsagility.github.io/Sagility-Generic-Forms-Outsource-Forms/" rel="noopener noreferrer" target="_blank">Generic Forms for Outsource</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="workday-panel">
+    <a class="orange-btn btn" href="https://sagility.wd1.myworkdayjobs.com/en-US/Sagility_Careers_PHP/login" rel="noopener noreferrer" target="_blank">WORKDAY LOG-IN HOME PAGE</a>
+    <a class="super-light-orange-btn btn" href="https://sagility.wd1.myworkdayjobs.com/en-US/Sagility_Careers_PHP/job/Iloilo-Philippines/Healthcare-Associates---Iloilo_REQ-000086-37/apply/applyManually" rel="noopener noreferrer" target="_blank">WORKDAY ILOILO</a>
+    <a class="super-light-orange-btn btn" href="https://sagility.wd1.myworkdayjobs.com/en-US/PHP_Bulk_Hiring_Job_Posting/job/Tagbilaran-City%2C-Innercore-Building/Healthcare-Associates---Bohol_REQ-003772-2/apply/applyManually" rel="noopener noreferrer" target="_blank">WORKDAY BOHOL</a>
+    <a class="super-light-orange-btn btn" href="https://sagility.wd1.myworkdayjobs.com/en-US/Sagility_Careers_PHP/job/Healthcare-Associates---Quezon-City_REQ-000084-16/apply/applyManually" rel="noopener noreferrer" target="_blank">WORKDAY QC</a>
+    <a class="super-light-orange-btn btn" href="https://sagility.wd1.myworkdayjobs.com/en-US/PHP_Bulk_Hiring_Job_Posting/job/Alabang%2C-Philippines/Healthcare-Associates---Alabang_REQ-000085-20/apply/applyManually" rel="noopener noreferrer" target="_blank">WORKDAY ALABANG</a>
+  </div>
+</div>
+
+<!-- Pre-Employment Files Section -->
+<h2>GOVERNMENT SECTION</h2>
+<div class="section government-grid">
+<div class="column">
+<a class="gov-light-btn btn" href="https://drive.google.com/file/d/1QdqGqG1ZrvgkZqlPjsz59KylrYCtNn8I/view" rel="noopener noreferrer" target="_blank">APPLY TIN APP</a>
+<a class="gov-light-btn btn" href="https://revie.bir.gov.ph/tin-validation" rel="noopener noreferrer" target="_blank">TIN VALIDATION</a>
+<a class="gov-light-btn btn" href="https://revie.bir.gov.ph/tin-inquiry?fbclid=IwY2xjawONLklleHRuA2FlbQIxMQABHvGFRChWXBsa8S_alPDTrmb-HEfVB9mrXf9VuJkh2KBHDXdk13L1FcoGoKIj_aem_7qoX0uQBAvyBSnEwrl7G-QP" rel="noopener noreferrer" target="_blank">TIN INQUIRY</a>
+</div>
+<div class="column">
+<a class="gov-light-btn btn" href="https://www.pagibigfundservices.com/virtualpagibig/OnlineMemRegMain.aspx" rel="noopener noreferrer" target="_blank">PAG-IBIG</a>
+<a class="gov-light-btn btn" href="https://www.sss.gov.ph/become-an-sss-member/" rel="noopener noreferrer" target="_blank">SSS</a>
+<a class="gov-light-btn btn" href="https://psaserbilis.com.ph/" rel="noopener noreferrer" target="_blank">PSA</a>  
+</div>
+<div class="column">
+<a class="gov-light-btn btn" href="https://firsttimejobseekers.nbi.gov.ph/" rel="noopener noreferrer" target="_blank">NBI- FIRST TIME JOBSEEKER</a>
+<a class="gov-light-btn btn" href="https://clearance.nbi.gov.ph/" rel="noopener noreferrer" target="_blank">NBI - RENEWAL</a>
+<a class="gov-light-btn btn" href="https://verification.nbi-clearance.io/" rel="noopener noreferrer" target="_blank">NBI - ONLINE VERIFICATION</a>
+</div>
+<div class="column">
+<a class="gov-light-btn btn" href="https://pcu.philhealth.gov.ph/" rel="noopener noreferrer" target="_blank">PHILHEALTH CHECK</a>
+<a class="gov-light-btn btn" href="https://sagilityphilhealther2.netlify.app/" rel="noopener noreferrer" target="_blank">PHILHEALTH ER2 FORM</a> 
+<a class="gov-light-btn btn" href="https://www.philhealth.gov.ph/services//" rel="noopener noreferrer" target="_blank">PHILHEALTH ONLINE SERVICES</a> 
+</div>
+</div>
+<!-- Assessment Files Section -->
+<h2>ASSESSMENT FILES SECTION</h2>
+<div class="section assessment-grid">
+<div class="column">
+<a class="dark-green-btn btn"  rel="noopener noreferrer" target="_blank">SET 1</a>
+<a class="btn super-light-green-btn" href="https://journey.harver-us.com/vacancy/680a85c5678d2a49a06c94d3 " rel="noopener noreferrer" target="_blank"><span class="assessment-level">Level 1</span><span class="assessment-details">&bull; Personality Test Test <br>&bull; Situational Judgement Test<br>&bull; Logical Reasoning <br>&bull; Basic Computer</span></a>
+<a class="btn super-light-green-btn" href="https://journey.harver-us.com/vacancy/680f51a8527167ce829a04dc" rel="noopener noreferrer" target="_blank"><span class="assessment-level">Level 2</span><span class="assessment-details">&bull; Spoken Language <br>&bull; English Language</span></a>
+</div>
+<div class="column">
+<a class="dark-yellow-btn btn"  rel="noopener noreferrer" target="_blank">SET 2</a>
+<a class="super-light-orange-btn btn" href="https://journey.harver-us.com/vacancy/680a85c5678d2a49a06c94d3 " rel="noopener noreferrer" target="_blank"><span class="assessment-level">Level 1</span><span class="assessment-details">&bull; Personality Test Test <br>&bull; Situational Judgement Test <br>&bull; Logical Reasoning <br>&bull; Basic Computer</span></a> 
+<a class="super-light-orange-btn btn" href="https://journey.harver-us.com/vacancy/680f58fe527167ce829a04f3 " rel="noopener noreferrer" target="_blank"><span class="assessment-level">Level 2</span><span class="assessment-details">&bull; Spoken Language <br>&bull; English Language <br>&bull; Typing Test</span></a>
+</div>
+<div class="column">
+<a class="maroon-btn btn"  rel="noopener noreferrer" target="_blank">SET 3</a>   
+<a class="light-pink-btn btn" href="https://journey.harver-us.com/vacancy/67dc5093f62d0c4018a3e8e9" rel="noopener noreferrer" target="_blank"><span class="assessment-level">Level 1</span><span class="assessment-details">&bull; Personality Test Test<br>&bull; Situational Judgement Test<br>&bull; Logical Reasoning</span></a>
+<a class="light-pink-btn btn" href="https://journey.harver-us.com/vacancy/680f5a39527167ce829a050b"><span class="assessment-level">Level 2</span><span class="assessment-details">&bull; Spoken Language<br>&bull; English Language <br>&bull; Basic Computer</span></a>
+</div>
+<div class="column">
+<a class="dark-purple-btn btn"  rel="noopener noreferrer" target="_blank">SET 4</a>   
+<a class="light-purple-btn btn" href="https://journey.harver-us.com/vacancy/67dc5093f62d0c4018a3e8e9" rel="noopener noreferrer" target="_blank"><span class="assessment-level">Level 1</span><span class="assessment-details">&bull; Personality Test Test<br>&bull; Situational Judgement Test<br>&bull; Logical Reasoning</span></a>
+<a class="light-purple-btn btn" href="https://journey.harver-us.com/vacancy/680f5e77527167ce829a053b"><span class="assessment-level">Level 2</span><span class="assessment-details">&bull; Spoken Language<br>&bull; English Language<br>&bull; Basic Computer <br>&bull; Typing Test</span></a>
+</div>
+</div>
+<!-- Assessment Files Section -->
+<h2>OTHER ASSESSMENT SECTION</h2>
+<div class="section sagility-grid">
+<div class="column">
+<a class="standalone-blue-btn btn"  target="_blank">STANDALONE  <br> ASSESSMENT</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/67e314c6fdb051af4a247646 " rel="noopener noreferrer" target="_blank">Spoken B1/B2</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/67e314c6fdb051af4a247646 " rel="noopener noreferrer" target="_blank">Spoken B2/C1</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/67e85fd6f2d06a81c622b861 " rel="noopener noreferrer" target="_blank">English Language</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/67e86c60f2d06a81c622b88e " rel="noopener noreferrer" target="_blank">Typing Test Test</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/67e9eb45f2d06a81c622b8a3 " rel="noopener noreferrer" target="_blank">Basic Basic Computer</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/6a060301154605ed880b0d35" rel="noopener noreferrer" target="_blank">Spanish</a> 
+</div>
+<div class="column">
+<a class="standalone-blue-btn btn"  target="_blank">CLINICAL STANDALONE <br> ASSESSMENT</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/67e86a60f2d06a81c622b875 " rel="noopener noreferrer" target="_blank">Oncology</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/67e85ab1f2d06a81c622b834 " rel="noopener noreferrer" target="_blank">RNT</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/67e30e38fdb051af4a24761f" rel="noopener noreferrer" target="_blank">Clinical Assessment</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/67e73e7af2d06a81c622b807" rel="noopener noreferrer" target="_blank">Anatomy</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/67e30c44fdb051af4a2475f6" rel="noopener noreferrer" target="_blank">Data Entry</a>
+</div>
+<div class="column">
+<a class="standalone-blue-btn btn"  target="_blank">FLATIRON<br> ASSESSMENT</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/680f774d527167ce829a060e" rel="noopener noreferrer" target="_blank">Level 2 <br>English B2<br>Typing Test<br>Registered Nursing Test<br>Oncology</a>
+<a class="standalone-blue-btn btn"  target="_blank">CLINICAL APPEALS<br> ASSESSMENT</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/680f7781527167ce829a0628" rel="noopener noreferrer" target="_blank">Level 2 <br>English B2<br>Typing Test<br>Registered Nursing Test</a>
+<a class="standalone-blue-btn btn" target="_blank">ENLYTE UNITY<br> ASSESSMENT</a>
+<a class="lightblue-btn btn" href="https://journey.harver-us.com/vacancy/680f7607527167ce829a05bf" rel="noopener noreferrer" target="_blank">Level 2 <br>English B2<br>Typing Test<br>Registered Nursing Test</a>
+</div>
+</div>
+<!-- OTHER Files Section -->
+<h2>OTHER SECTION</h2>
+<div class="section other-grid">
+<div class="column">
+<a class="dark-grey-btn btn"  target="_blank">OTHER ASSESSMENT <br> FILES</a>
+<a class="light-grey-btn btn" href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_YWUyMzUzYzYtNTgxYS00ZWVhLWJjN2UtNTA4YWM2Mzg1Zjdk%40thread.v2/0?context=%7b%22Tid%22%3a%22c0745124-84a4-4909-bb95-307ad5a8ae15%22%2c%22Oid%22%3a%22e7eb26f1-7544-4bac-bfac-c4674034791e%22%7d" rel="noopener noreferrer" target="_blank">Virtual Assessment</a>
+<a class="light-grey-btn btn" href="https://sagilityassessmentinstructions-harver.netlify.app/" rel="noopener noreferrer" target="_blank">Assessment Instructions</a>
+<a class="light-grey-btn btn" href="https://sagilityassessment-cmyk.github.io/sagitypingtest/login.html" rel="noopener noreferrer" target="_blank">Practice Typing Test Test</a>
+<a class="light-grey-btn btn" href="https://docs.google.com/forms/d/e/1FAIpQLSe0iSOWBO3KllmCQTk8mQLEBU_0A_dldey9mdmR52e3ZlnYMg/viewform" rel="noopener noreferrer" target="_blank">Practice Test RNT and Onco</a>
+<a class="light-grey-btn btn" href="https://sagilityassessment-cmyk.github.io/listenandrepeatnotes/" rel="noopener noreferrer" target="_blank">Notes</a>
+<a class="light-grey-btn btn" href="https://1drv.ms/x/c/431909f5033fcac6/EcMr2vSV4FhPrWqBQzh1mXEB1K6mkffY8HbncMHAj79FFA?e=cnZlx4" rel="noopener noreferrer" target="_blank">Assessment Viewer</a>
+<a class="light-grey-btn btn" href="https://betainebvv.sharepoint.com/:x:/r/sites/VIRTUALASSESSMENT/Shared%20Documents/ONE%20TRACKER/ENDORSEMENT%20SHEET%20FOR%20ASSESSMENT%20V3.xlsx?d=w6db708c53d8d4d64a989b6fb48dff0c0&amp;csf=1&amp;web=1&amp;e=UA71s8" rel="noopener noreferrer" target="_blank">Endorsement Files</a>
+<a class="light-grey-btn btn" href="https://sagilityassessment-cmyk.github.io/SagilityPH-Assessment/" rel="noopener noreferrer" target="_blank">Remote Assessment Manager</a>
+<a class="light-grey-btn btn" href="https://drive.google.com/file/d/1z_BwhD6bpzFI8fj9wNUZJBVl4cH9m3jt/view?usp=sharing" rel="noopener noreferrer" target="_blank">Harver Guide</a>
+</div>  
+<div class="column">
+<a class="dark-grey-btn btn"  target="_blank">OTHER TOOLS<br> FILES</a>
+<a class="light-grey-btn btn" href="https://sagilityassessment-cmyk.github.io/Free-PDF-Sign-Tool-Sagility/" rel="noopener noreferrer" target="_blank">Esign PDF Editor</a>
+<a class="light-grey-btn btn" href="https://drive.google.com/file/d/1q1v0xFKYxUG8yorx8e6Jz1omjqd1LbHs/view" rel="noopener noreferrer" target="_blank">Any</a>
+<a class="light-grey-btn btn" href="https://sagilityassessment-cmyk.github.io/Catch-Up-En-Route-Videos_Sagility/" rel="noopener noreferrer" target="_blank">EnRoute Videos</a>
+<a class="light-grey-btn btn" href="https://recruiteradminportal.sagilife.online/" rel="noopener noreferrer" target="_blank">Medical & Pre-Emp Admin Iloilo and Bohol</a>
+<a class="light-grey-btn btn" href="https://assessmentportal.sagilife.online/notes.html" rel="noopener noreferrer" target="_blank">Sagi Notes</a> 
+</div>
+<div class="column">
+<a class="dark-green-btn btn"  rel="noopener noreferrer" target="_blank"> SEAT ID MANAGER <br> LOCATION</a>
+<a class="btn teal-btn" href="https://sagilityassessment-cmyk.github.io/SagilityPH-Assessment/" rel="noopener noreferrer" target="_blank"> Assessment Portal</a>
+</div>
+</div>
+<script>
+document.querySelectorAll(".btn").forEach((link) => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = link.className;
+    button.innerHTML = link.innerHTML;
+
+    if (link.href) {
+        button.dataset.href = link.href;
+        button.addEventListener("click", () => {
+            window.open(button.dataset.href, "_blank", "noopener,noreferrer");
+        });
+    }
+
+    link.replaceWith(button);
+});
+
+const header = document.querySelector(".header");
+const preEmployment = document.querySelector(".preemp-layout");
+const sectionBlock = (title) => {
+    const heading = Array.from(document.querySelectorAll("h2")).find((item) =>
+        item.textContent.trim() === title
+    );
+
+    return heading ? [heading, heading.nextElementSibling] : [];
+};
+
+const orderedSections = [
+    ...sectionBlock("ASSESSMENT FILES SECTION"),
+    ...sectionBlock("OTHER ASSESSMENT SECTION"),
+    ...sectionBlock("GOVERNMENT SECTION"),
+    preEmployment,
+    ...sectionBlock("OTHER SECTION")
+].filter(Boolean);
+
+header.after(...orderedSections);
+
+const searchForm = document.getElementById("search-form");
+const searchInput = document.getElementById("site-search");
+const searchStatus = document.getElementById("search-status");
+const searchableItems = Array.from(document.querySelectorAll("h2, .btn"));
+
+function searchFiles() {
+    const keyword = searchInput.value.trim().toLowerCase();
+
+    searchableItems.forEach((item) => item.classList.remove("search-match"));
+
+    if (!keyword) {
+        searchStatus.textContent = "";
+        return;
+    }
+
+    const matches = searchableItems.filter((item) =>
+        item.textContent.toLowerCase().includes(keyword)
+    );
+
+    matches.forEach((item) => item.classList.add("search-match"));
+
+    if (matches.length) {
+        matches[0].scrollIntoView({ behavior: "smooth", block: "center" });
+        searchStatus.textContent = `${matches.length} found`;
+    } else {
+        searchStatus.textContent = "No matches";
+    }
+}
+
+searchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    searchFiles();
+});
+
+searchInput.addEventListener("input", searchFiles);
+</script>
