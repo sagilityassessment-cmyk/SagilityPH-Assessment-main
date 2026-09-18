@@ -627,7 +627,11 @@
         <tbody id="sentEmailHistoryBody"></tbody>
       </table>
     </div>
-    <button id="deleteSelectedHistoryBtn" class="history-delete-selected" type="button" disabled>Delete</button>
+    <div id="sentEmailHistoryPagination" class="table-pagination" aria-label="Sent email history pages"></div>
+    <div class="table-delete-actions">
+      <button id="selectAllHistoryButton" class="table-select-all-button" type="button">Select All</button>
+      <button id="deleteSelectedHistoryBtn" class="history-delete-selected" type="button" disabled>Delete</button>
+    </div>
   </section>
 
   <dialog id="packageViewDialog" class="package-view-dialog">
@@ -692,7 +696,11 @@
         </tbody>
       </table>
     </div>
-    <button id="deleteTypingResultsBtn" class="history-delete-selected" type="button" disabled>Delete</button>
+    <div id="typingResultsPagination" class="table-pagination" aria-label="Typing test result pages"></div>
+    <div class="table-delete-actions">
+      <button id="selectAllTypingResultsButton" class="table-select-all-button" type="button">Select All</button>
+      <button id="deleteTypingResultsBtn" class="history-delete-selected" type="button" disabled>Delete</button>
+    </div>
     <div class="typing-chart-toggle-wrap">
       <div id="typingChartHint" class="typing-chart-hint" role="status">Click to show report graph</div>
       <button id="toggleTypingResultsChartBtn" class="typing-chart-toggle" type="button" aria-expanded="false" aria-controls="typingResultsChart">Show graph</button>
@@ -751,6 +759,7 @@
         <tbody id="notificationDetailsBody"></tbody>
       </table>
     </div>
+    <div id="notificationDetailsPagination" class="table-pagination" aria-label="Candidate status pages"></div>
     <div class="notification-export-row">
       <div class="export-controls notification-export-controls">
         <label for="notificationExportDateInput">From</label>
@@ -761,6 +770,7 @@
         <p id="notificationExportStatus" class="export-status" role="status" aria-live="polite"></p>
       </div>
       <div class="notification-delete-controls">
+        <button id="selectAllNotificationButton" class="table-select-all-button" type="button">Select All</button>
         <button id="deleteSelectedNotificationsBtn" class="history-delete-selected" type="button" disabled>Delete</button>
       </div>
     </div>
@@ -925,7 +935,7 @@
       document.documentElement.classList.add('portal-login-locked');
     }
 
-    document.getElementById('portalResetPassword').addEventListener('click', async () => {
+    document.getElementById('portalResetPassword')?.addEventListener('click', async () => {
       const email = document.getElementById('portalLoginEmail').value.trim().toLowerCase();
       if (!email) {
         portalLoginMessage.textContent = 'Enter your company email first.';
@@ -964,17 +974,32 @@
 
     firebase.initializeApp(firebaseConfig);
     const firestore = firebase.firestore();
-    const firebaseAuthReady = firebase.auth().signInAnonymously();
+    let firebaseAuthPromise;
 
-    async function ensureFirebaseAuth() {
-      try {
-        await firebaseAuthReady;
-      } catch {
-      }
-      if (!firebase.auth().currentUser) {
-        await firebase.auth().signInAnonymously();
-      }
-      await firebase.auth().currentUser.getIdToken(true);
+    function ensureFirebaseAuth() {
+      if (firebaseAuthPromise) return firebaseAuthPromise;
+
+      firebaseAuthPromise = new Promise((resolve, reject) => {
+        const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+          unsubscribe();
+          if (user) {
+            resolve(user);
+            return;
+          }
+
+          firebase.auth().signInAnonymously()
+            .then(credential => resolve(credential.user))
+            .catch(error => {
+              firebaseAuthPromise = null;
+              reject(error);
+            });
+        }, error => {
+          firebaseAuthPromise = null;
+          reject(error);
+        });
+      });
+
+      return firebaseAuthPromise;
     }
 
     async function watchGlobalPortalLogout() {
@@ -996,6 +1021,8 @@
 
     const LOCAL_STORAGE_KEY = 'sagility-assessment-state';
     const HISTORY_DELETE_KEY = 'sagility-assessment-hidden-history';
+    const SENT_HISTORY_CACHE_KEY = 'sagility-sent-history-cache';
+    const TYPING_RESULTS_CACHE_KEY = 'sagility-typing-results-cache';
     const chimeAudio = new Audio('chime.mp3');
     chimeAudio.preload = 'auto';
     let notificationAudioUnlocked = false;
@@ -1006,6 +1033,23 @@
     let sentHistoryRecords = [];
     let previousRecordIds = new Set();
     let hasLoadedHistory = false;
+
+    function readCachedRecords(key) {
+      try {
+        const cached = JSON.parse(localStorage.getItem(key) || '[]');
+        return Array.isArray(cached) ? cached : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function writeCachedRecords(key, records) {
+      try {
+        localStorage.setItem(key, JSON.stringify(records));
+      } catch (error) {
+        console.warn('Unable to cache report records:', error);
+      }
+    }
 
     function playChime() {
       chimeAudio.pause();
@@ -1584,17 +1628,74 @@
       deleteButton.textContent = count > 0 ? `Delete (${count})` : 'Delete';
     }
 
-    function renderSentHistory(searchTerm = '') {
+    function updateSelectAllCheckbox(headerId, bodyId, checkboxSelector) {
+      const headerButton = document.getElementById(headerId);
+      const visibleCheckboxes = [...document.getElementById(bodyId).querySelectorAll(checkboxSelector)];
+      const selectedCount = visibleCheckboxes.filter(checkbox => checkbox.checked).length;
+      const allSelected = visibleCheckboxes.length > 0 && selectedCount === visibleCheckboxes.length;
+      headerButton.dataset.selected = String(allSelected);
+      headerButton.textContent = allSelected ? 'Clear All' : 'Select All';
+    }
+
+    const TABLE_PAGE_SIZE = 10;
+    const tablePages = {
+      sentEmailHistory: 1,
+      typingResults: 1,
+      notificationDetails: 1
+    };
+
+    function renderTablePagination(containerId, tableKey, recordCount) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const pageCount = Math.max(1, Math.ceil(recordCount / TABLE_PAGE_SIZE));
+      tablePages[tableKey] = Math.min(tablePages[tableKey], pageCount);
+      const currentPage = tablePages[tableKey];
+      if (pageCount === 1) {
+        container.innerHTML = '';
+        return;
+      }
+      container.innerHTML = `
+        <button type="button" class="table-page-button" data-page-direction="previous" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+        <span class="table-page-status">Page ${currentPage} of ${pageCount}</span>
+        <button type="button" class="table-page-button" data-page-direction="next" ${currentPage === pageCount ? 'disabled' : ''}>Next</button>`;
+      container.querySelector('[data-page-direction="previous"]').addEventListener('click', () => {
+        tablePages[tableKey] -= 1;
+        rerenderPagedTable(tableKey);
+      });
+      container.querySelector('[data-page-direction="next"]').addEventListener('click', () => {
+        tablePages[tableKey] += 1;
+        rerenderPagedTable(tableKey);
+      });
+    }
+
+    function getTablePage(records, tableKey) {
+      const start = (tablePages[tableKey] - 1) * TABLE_PAGE_SIZE;
+      return records.slice(start, start + TABLE_PAGE_SIZE);
+    }
+
+    function rerenderPagedTable(tableKey) {
+      if (tableKey === 'sentEmailHistory') {
+        renderSentHistory(document.getElementById('historySearchInput').value, false);
+      } else if (tableKey === 'typingResults') {
+        renderTypingResults(false);
+      } else {
+        renderReports(false);
+      }
+    }
+
+    function renderSentHistory(searchTerm = '', resetPage = true) {
+      if (resetPage) tablePages.sentEmailHistory = 1;
       const search = searchTerm.trim().toLowerCase();
       const historyBody = document.getElementById('sentEmailHistoryBody');
       const records = getVisibleHistoryRecords()
         .filter(item => !search || `${item.name || ''} ${item.email || ''} ${item.location || ''}`.toLowerCase().includes(search))
         .sort((first, second) => Number(second.timestamp || 0) - Number(first.timestamp || 0));
 
+      const pageRecords = getTablePage(records, 'sentEmailHistory');
       historyBody.innerHTML = records.length
-        ? records.map((item, index) => `
+        ? pageRecords.map((item, index) => `
           <tr>
-            <td>${index + 1}</td>
+            <td>${(tablePages.sentEmailHistory - 1) * TABLE_PAGE_SIZE + index + 1}</td>
             <td>${escapeHtml(item.name || '')}</td>
             <td>${escapeHtml(item.email || '')}</td>
             <td>${escapeHtml(normalizeLocation(item.location || ''))}</td>
@@ -1604,10 +1705,12 @@
             <td><input type="checkbox" class="history-delete-checkbox" data-record-id="${escapeHtml(item.recordId || '')}" aria-label="Select ${escapeHtml(item.name || 'record')} for deletion"></td>
           </tr>`).join('')
         : '<tr><td colspan="8">No sent email records found</td></tr>';
+      renderTablePagination('sentEmailHistoryPagination', 'sentEmailHistory', records.length);
 
       historyBody.querySelectorAll('.history-delete-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', updateDeleteSelectedButtonState);
       });
+      updateSelectAllCheckbox('selectAllHistoryButton', 'sentEmailHistoryBody', '.history-delete-checkbox');
       historyBody.querySelectorAll('.history-view-button').forEach(button => {
         button.addEventListener('click', () => showSentPackages(button.dataset.recordId));
       });
@@ -1641,7 +1744,8 @@
       deleteButton.textContent = count > 0 ? `Delete (${count})` : 'Delete';
     }
 
-    function renderReports() {
+    function renderReports(resetPage = true) {
+      if (resetPage) tablePages.notificationDetails = 1;
       const notificationSearch = document.getElementById('notificationSearchInput')?.value.trim().toLowerCase() || '';
       const matchesNotificationSearch = item => !notificationSearch || `${item.name || ''} ${item.email || ''} ${item.location || ''}`.toLowerCase().includes(notificationSearch);
       const counts = {
@@ -1692,10 +1796,11 @@
         const records = getVisibleNotificationRecords()
           .filter(matchesNotificationSearch)
           .sort((first, second) => Number(second.timestamp || 0) - Number(first.timestamp || 0));
+        const pageRecords = getTablePage(records, 'notificationDetails');
         detailsBody.innerHTML = records.length
-          ? records.map((item, index) => `
+          ? pageRecords.map((item, index) => `
             <tr>
-              <td>${index + 1}</td>
+              <td>${(tablePages.notificationDetails - 1) * TABLE_PAGE_SIZE + index + 1}</td>
               <td>${escapeHtml(item.name || '')}</td>
               <td>${escapeHtml(item.email || '')}</td>
               <td>${escapeHtml(item.location || '')}</td>
@@ -1711,6 +1816,7 @@
               </td>
             </tr>`).join('')
           : '<tr><td colspan="7">No candidate notifications yet</td></tr>';
+        renderTablePagination('notificationDetailsPagination', 'notificationDetails', records.length);
         detailsBody.querySelectorAll('.notification-status-checkbox').forEach(checkbox => {
           checkbox.addEventListener('change', async () => {
             const statusLabel = checkbox.closest('.notification-status-cell').querySelector('span');
@@ -1731,6 +1837,7 @@
         detailsBody.querySelectorAll('.notification-delete-checkbox').forEach(checkbox => {
           checkbox.addEventListener('change', updateDeleteNotificationButtonState);
         });
+        updateSelectAllCheckbox('selectAllNotificationButton', 'notificationDetailsBody', '.notification-delete-checkbox');
 
       }
       const notificationStatusChart = document.getElementById('notificationStatusChart');
@@ -1950,7 +2057,7 @@
     }
 
     async function addSentHistory(candidateName, recipient, location, packages = [], isFollowUp = false) {
-      await firebaseAuthReady;
+      await ensureFirebaseAuth();
       const docRef = await firestore.collection('sentHistory').add({
         date: new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' }),
         dateKey: getManilaDateKey(),
@@ -1982,6 +2089,15 @@
     }
 
     function initializeFirebaseHistory() {
+      const cachedRecords = readCachedRecords(SENT_HISTORY_CACHE_KEY);
+      if (cachedRecords.length) {
+        sentHistoryRecords = cachedRecords;
+        notificationRecords = sentHistoryRecords.filter(item => String(item.source || '').startsWith('candidate-notification'));
+        renderSentHistory(document.getElementById('historySearchInput').value);
+        renderRecentSentHistory(document.getElementById('recentHistorySearchInput').value);
+        renderReports();
+      }
+
       ensureFirebaseAuth()
         .then(() => {
           firestore.collection('sentHistory')
@@ -2017,6 +2133,7 @@
               hasLoadedHistory = true;
               
               sentHistoryRecords = newRecords;
+              writeCachedRecords(SENT_HISTORY_CACHE_KEY, newRecords);
               notificationRecords = sentHistoryRecords.filter(item => String(item.source || '').startsWith('candidate-notification'));
               renderSentHistory(document.getElementById('historySearchInput').value);
               renderRecentSentHistory(document.getElementById('recentHistorySearchInput').value);
@@ -2037,6 +2154,14 @@
     document.getElementById('historySearchInput').addEventListener('input', event => {
       renderSentHistory(event.target.value);
     });
+    document.getElementById('selectAllHistoryButton').addEventListener('click', event => {
+      const shouldSelect = event.currentTarget.dataset.selected !== 'true';
+      document.querySelectorAll('#sentEmailHistoryBody .history-delete-checkbox').forEach(checkbox => {
+        checkbox.checked = shouldSelect;
+      });
+      updateDeleteSelectedButtonState();
+      updateSelectAllCheckbox('selectAllHistoryButton', 'sentEmailHistoryBody', '.history-delete-checkbox');
+    });
     document.getElementById('recentHistorySearchInput').addEventListener('input', event => {
       renderRecentSentHistory(event.target.value);
     });
@@ -2044,6 +2169,14 @@
 
     document.getElementById('notificationSearchInput').addEventListener('input', renderReports);
     document.getElementById('notificationSearchBtn').addEventListener('click', renderReports);
+    document.getElementById('selectAllNotificationButton').addEventListener('click', event => {
+      const shouldSelect = event.currentTarget.dataset.selected !== 'true';
+      document.querySelectorAll('#notificationDetailsBody .notification-delete-checkbox').forEach(checkbox => {
+        checkbox.checked = shouldSelect;
+      });
+      updateDeleteNotificationButtonState();
+      updateSelectAllCheckbox('selectAllNotificationButton', 'notificationDetailsBody', '.notification-delete-checkbox');
+    });
     document.getElementById('weeklyReportMonthInput').addEventListener('change', renderWeeklyAssessmentChart);
 
     document.getElementById('exportDataBtn').addEventListener('click', exportHistoryCsv);
@@ -2072,7 +2205,7 @@
 
       deleteButton.disabled = true;
       try {
-        await firebaseAuthReady;
+        await ensureFirebaseAuth();
         const batch = firestore.batch();
         ids.forEach(id => batch.update(firestore.collection('sentHistory').doc(id), {
           deleted: true,
@@ -2109,7 +2242,7 @@
 
       deleteButton.disabled = true;
       try {
-        await firebaseAuthReady;
+        await ensureFirebaseAuth();
         const batch = firestore.batch();
         ids.forEach(id => batch.update(firestore.collection('sentHistory').doc(id), {
           deleted: true,
@@ -2145,7 +2278,7 @@
 
       deleteButton.disabled = true;
       try {
-        await firebaseAuthReady;
+        await ensureFirebaseAuth();
         const batch = firestore.batch();
         ids.forEach(id => batch.update(firestore.collection('sentHistory').doc(id), {
           deleted: true,
@@ -2373,6 +2506,12 @@
     const deleteTypingResultsBtn = document.getElementById('deleteTypingResultsBtn');
     const selectedTypingResultIds = new Set();
 
+    const cachedTypingResults = readCachedRecords(TYPING_RESULTS_CACHE_KEY);
+    if (cachedTypingResults.length) {
+      typingResultsState.records = cachedTypingResults;
+      renderTypingResults();
+    }
+
     toggleTypingResultsChartBtn.addEventListener('click', () => {
       const isCollapsed = typingResultsChart.classList.toggle('is-collapsed');
       toggleTypingResultsChartBtn.setAttribute('aria-expanded', String(!isCollapsed));
@@ -2475,7 +2614,8 @@
       typingResultsChart.innerHTML = `<div class="typing-chart-title">Completed tests by WPM range</div><div class="typing-chart-legend">${legend}</div><div class="typing-chart-scroll"><svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Completed typing tests grouped by WPM range for each location"><g>${gridLines}</g>${lines}${labels}</svg></div>`;
     }
 
-    function renderTypingResults() {
+    function renderTypingResults(resetPage = true) {
+      if (resetPage) tablePages.typingResults = 1;
       const nameFilter = typingResultsNameFilter.value.trim().toLowerCase();
       const seatFilter = typingResultsSeatFilter.value.trim().toLowerCase();
       const locationFilter = typingResultsLocationFilter.value.trim().toLowerCase();
@@ -2485,10 +2625,11 @@
         String(record.location || '').toLowerCase().includes(locationFilter)
       ));
 
+      const pageRecords = getTablePage(records, 'typingResults');
       typingResultsBody.innerHTML = records.length
-        ? records.map((record, index) => `
+        ? pageRecords.map((record, index) => `
           <tr>
-            <td>${index + 1}</td>
+            <td>${(tablePages.typingResults - 1) * TABLE_PAGE_SIZE + index + 1}</td>
             <td>${escapeTypingResult(record.name)}</td>
             <td>${escapeTypingResult(record.location || '-')}</td>
             <td>${escapeTypingResult(record.seatNumber)}</td>
@@ -2500,6 +2641,7 @@
           </tr>
         `).join('')
         : '<tr><td colspan="9">No typing test results found.</td></tr>';
+      renderTablePagination('typingResultsPagination', 'typingResults', records.length);
       renderTypingResultsChart(records);
 
       typingResultsBody.querySelectorAll('.typing-result-checkbox').forEach(checkbox => {
@@ -2507,8 +2649,10 @@
           if (checkbox.checked) selectedTypingResultIds.add(checkbox.dataset.resultId);
           else selectedTypingResultIds.delete(checkbox.dataset.resultId);
           updateTypingResultsDeleteControls();
+          updateSelectAllCheckbox('selectAllTypingResultsCheckbox', 'typingResultsBody', '.typing-result-checkbox');
         });
       });
+      updateSelectAllCheckbox('selectAllTypingResultsButton', 'typingResultsBody', '.typing-result-checkbox');
       updateTypingResultsDeleteControls();
     }
 
@@ -2521,6 +2665,16 @@
     typingResultsNameFilter.addEventListener('input', renderTypingResults);
     typingResultsSeatFilter.addEventListener('input', renderTypingResults);
     typingResultsLocationFilter.addEventListener('input', renderTypingResults);
+    document.getElementById('selectAllTypingResultsButton').addEventListener('click', event => {
+      const shouldSelect = event.currentTarget.dataset.selected !== 'true';
+      document.querySelectorAll('#typingResultsBody .typing-result-checkbox').forEach(checkbox => {
+        checkbox.checked = shouldSelect;
+        if (shouldSelect) selectedTypingResultIds.add(checkbox.dataset.resultId);
+        else selectedTypingResultIds.delete(checkbox.dataset.resultId);
+      });
+      updateTypingResultsDeleteControls();
+      updateSelectAllCheckbox('selectAllTypingResultsButton', 'typingResultsBody', '.typing-result-checkbox');
+    });
     deleteTypingResultsBtn.addEventListener('click', async () => {
       const ids = [...selectedTypingResultIds];
       if (!ids.length || !window.confirm(`Delete ${ids.length} selected typing result${ids.length === 1 ? '' : 's'}?`)) return;
@@ -2547,6 +2701,7 @@
             .map(document => ({ id: document.id, ...document.data() }))
             .filter(record => !record.deleted)
             .sort((first, second) => Number(second.completedAt || 0) - Number(first.completedAt || 0));
+          writeCachedRecords(TYPING_RESULTS_CACHE_KEY, typingResultsState.records);
           renderTypingResults();
         }, error => {
           console.error('Typing results read failed:', error);

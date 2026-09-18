@@ -1798,7 +1798,13 @@ button.view-display-action:hover {
 
 .notification-delete-controls {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  gap: 8px;
+}
+
+.notification-delete-controls .history-delete-selected {
+  margin: 0;
 }
 
 .notification-export-row {
@@ -2238,6 +2244,71 @@ section.card h2 {
 .history-delete-selected:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-height: 30px;
+  margin-top: 8px;
+}
+
+.table-page-button {
+  width: auto;
+  min-width: 64px;
+  padding: 5px 10px;
+  border: 1px solid #397ef4;
+  border-radius: 6px;
+  color: #2455a0;
+  background: #eef6ff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.table-page-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.table-page-status {
+  min-width: 82px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  text-align: center;
+}
+
+.table-delete-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.table-delete-actions .history-delete-selected {
+  margin: 0;
+}
+
+.table-select-all-button {
+  width: auto !important;
+  min-width: 0;
+  margin-left: 4px;
+  padding: 6px 12px !important;
+  border: 1px solid #397ef4 !important;
+  border-radius: 6px !important;
+  color: #2455a0 !important;
+  background: #eef6ff !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 1.2;
+}
+
+.table-delete-actions .table-select-all-button,
+.notification-delete-controls .table-select-all-button {
+  margin: 0;
 }
 
 .sent-history-empty {
@@ -2786,7 +2857,7 @@ button {
   font-family: inherit;
 }
 
-button:not(.send-email-btn):not(.pkg-remove):not(.history-delete-btn):not(.history-delete-selected):not(.notification-search-button):not(.seat-call-button):not(.seat-manager-action):not(.notes-add-button):not(.notes-click-button):not(.notes-save-button):not(.notes-delete-button):not(.typing-chart-toggle):not(.portal-login-submit):not(.portal-reset-password):not(.logout-btn) {
+button:not(.send-email-btn):not(.pkg-remove):not(.history-delete-btn):not(.history-delete-selected):not(.notification-search-button):not(.seat-call-button):not(.seat-manager-action):not(.notes-add-button):not(.notes-click-button):not(.notes-save-button):not(.notes-delete-button):not(.typing-chart-toggle):not(.table-page-button):not(.table-select-all-button):not(.portal-login-submit):not(.portal-reset-password):not(.logout-btn) {
   width: 100%;
   padding: 16px 20px;
   border: none;
@@ -2799,12 +2870,12 @@ button:not(.send-email-btn):not(.pkg-remove):not(.history-delete-btn):not(.histo
   transition: all 0.2s ease;
 }
 
-button:not(.send-email-btn):not(.pkg-remove):not(.history-delete-selected):not(.notification-search-button):not(.seat-call-button):not(.seat-manager-action):not(.portal-login-submit):not(.portal-reset-password):not(.logout-btn):hover {
+button:not(.send-email-btn):not(.pkg-remove):not(.history-delete-selected):not(.notification-search-button):not(.seat-call-button):not(.seat-manager-action):not(.portal-login-submit):not(.portal-reset-password):not(.table-page-button):not(.table-select-all-button):not(.logout-btn):hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(57, 184, 255, 0.3);
 }
 
-button:not(.send-email-btn):not(.pkg-remove):not(.history-delete-selected):not(.notification-search-button):not(.seat-call-button):not(.seat-manager-action):not(.portal-login-submit):not(.portal-reset-password):not(.logout-btn):active {
+button:not(.send-email-btn):not(.pkg-remove):not(.history-delete-selected):not(.notification-search-button):not(.seat-call-button):not(.seat-manager-action):not(.portal-login-submit):not(.portal-reset-password):not(.table-page-button):not(.table-select-all-button):not(.logout-btn):active {
   transform: translateY(0);
 }
 
