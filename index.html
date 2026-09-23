@@ -273,6 +273,29 @@
               <input id="followAssessmentCheckbox" type="checkbox">
               Click here if Follow Assessment
             </label>
+            <label class="retake-option">
+              <input id="virtualAssessmentCheckbox" type="checkbox">
+              Click here if Virtual Assessment
+            </label>
+          </div>
+        </div>
+
+        <div id="virtualAssessmentFields" class="virtual-assessment-fields" style="display:none; margin-top: 16px;">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label class="form-label" for="virtualAssessmentDateInput">Date today:</label>
+            <input id="virtualAssessmentDateInput" type="date" value="">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="virtualAssessmentTimeInput">Time</label>
+            <select id="virtualAssessmentTimeInput">
+              <option value="">Select time</option>
+              <option value="11:00 AM - 11:10 AM">11:00 AM - 11:10 AM</option>
+              <option value="1:30 PM - 1:40 PM">1:30 PM - 1:40 PM</option>
+              <option value="3:30 PM - 3:40 PM">3:30 PM - 3:40 PM</option>
+              <option value="5:30 PM - 5:40 PM">5:30 PM - 5:40 PM</option>
+              <option value="8:00 PM - 8:10 PM">8:00 PM - 8:10 PM</option>
+              <option value="10:00 PM - 10:10 PM">10:00 PM - 10:10 PM</option>
+            </select>
           </div>
         </div>
       </section>
@@ -872,7 +895,7 @@
     updateTypingTestLink();
 
     // Paste your deployed Google Apps Script Web app URL here.
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBgHVtTwGcI5Wk2261KJicHaYYqcENG3QzYJCnjnIHr9HHilIkMzo28zK3qruMlvZQxQ/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoJJ05jr0_G6StvtaOOzuQISkr-Eep_lNb0X5keOvJjIA_YVxvDfCMwz12I9kXFE90/exec';
     const firebaseConfig = {
       apiKey: 'AIzaSyBZVAXmgE-24AVUFB_7xS4GQi4OwkIvptQ',
       authDomain: 'sagility-assessment.firebaseapp.com',
@@ -2329,18 +2352,38 @@
       const location = document.getElementById('locationInput').value.trim() || 'Location';
       const retake = document.getElementById('retakeCheckbox').checked;
       const followUp = document.getElementById('followAssessmentCheckbox').checked;
+      const isVirtualAssessment = document.getElementById('virtualAssessmentCheckbox').checked;
+      const dateValue = document.getElementById('virtualAssessmentDateInput').value;
+      const timeValue = document.getElementById('virtualAssessmentTimeInput').value;
       const prefix = followUp ? 'Sagility Assessment Follow Up_' : retake ? 'Sagility Assessment Retake_' : 'Sagility Assessment_';
       const packages = getOrderedSelectedPackageCheckboxes();
       const packageLinks = packages.map(checkbox =>
         `<li><strong>${escapeHtml(checkbox.dataset.package)}</strong>: <a href="${escapeHtml(checkbox.dataset.url)}">Click here</a></li>`
       ).join('');
+      const notificationUrl = 'https://assessmentportal.sagilife.online/candidate.html';
+      const meetingUrl = 'https://teams.microsoft.com/l/meetup-join/19%3ameeting_YWUyMzUzYzYtNTgxYS00ZWVhLWJjN2UtNTA4YWM2Mzg1Zjdk%40thread.v2/0?context=%7b%22Tid%22%3a%22c0745124-84a4-4909-bb95-307ad5a8ae15%22%2c%22Oid%22%3a%22e7eb26f1-7544-4bac-bfac-c4674034791e%22%7d';
+      const scheduleDate = dateValue ? new Date(`${dateValue}T12:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Please choose a date';
+      const scheduleTime = timeValue || 'Not selected';
+
+      if (isVirtualAssessment) {
+        const virtualBody = `<p>Hi ${escapeHtml(name)},</p>
+          <p>As part of your application, we would like to inform you that you are scheduled for a virtual assessment on the details below:</p>
+          <p><strong>Date:</strong> ${escapeHtml(scheduleDate)}<br><strong>Time:</strong> ${escapeHtml(scheduleTime)}</p>
+          <p><strong>MS Teams Link:</strong> <a href="${meetingUrl}">Meeting Invite</a><br><strong>Meeting ID:</strong> 479 656 747 406 7<br><strong>Passcode:</strong> vi3nV3NB</p>
+          <p>Please make sure to join on or before your scheduled time, as we will only wait for 10 minutes before closing the virtual assessment room.</p>
+          <p>If you have any questions or encounter any issues, feel free to reach out.<br><a href="mailto:PHLTestAdmin@Sagilityhealth.com">PHLTestAdmin@Sagilityhealth.com</a></p>
+          <p>We look forward to your participation.</p>
+          <p><strong>Best Regards<br>Sagility Recruitment_${escapeHtml(location)}</strong></p>`;
+        document.getElementById('emailPreviewSubject').textContent = `Subject: Virtual Assessment Schedule – Sagility Recruitment_${location}`;
+        document.getElementById('emailPreviewBody').innerHTML = virtualBody.replace('Sagility Recruitment_${location}', `Sagility Recruitment_${location}`);
+        return;
+      }
+
       const introduction = followUp
         ? '<p>I would like to follow up on your assessment completion. Kindly complete the assessments below at your earliest convenience:</p>'
         : retake
           ? '<p>Sorry to inform you that you did not achieve the required assessment score(s) on one or more of the tests below. Please click the link(s) below to retake your assessment.</p>'
           : '<p>Good Day!</p><p>Please click link/s below to start your assessment.</p>';
-      const notificationUrl = 'https://assessmentportal.sagilife.online/candidate.html';
-      const meetingUrl = 'https://teams.microsoft.com/l/meetup-join/19%3ameeting_YWUyMzUzYzYtNTgxYS00ZWVhLWJjN2UtNTA4YWM2Mzg1Zjdk%40thread.v2/0?context=%7b%22Tid%22%3a%22c0745124-84a4-4909-bb95-307ad5a8ae15%22%2c%22Oid%22%3a%22e7eb26f1-7544-4bac-bfac-c4674034791e%22%7d';
       const body = `<p>Hi ${escapeHtml(name)},</p>
         ${introduction}
         <ol>${packageLinks || '<li>No packages selected</li>'}</ol>
@@ -2372,12 +2415,28 @@
       document.getElementById('emailPreviewBody').innerHTML = body;
     }
 
-    ['candidateNameInput', 'emailInput', 'locationInput', 'retakeCheckbox', 'followAssessmentCheckbox'].forEach(id => {
+    ['candidateNameInput', 'emailInput', 'locationInput', 'retakeCheckbox', 'followAssessmentCheckbox', 'virtualAssessmentCheckbox', 'virtualAssessmentDateInput', 'virtualAssessmentTimeInput'].forEach(id => {
       document.getElementById(id).addEventListener('input', renderEmailPreview);
       document.getElementById(id).addEventListener('change', renderEmailPreview);
     });
     document.querySelectorAll('.package-checkbox').forEach(checkbox => checkbox.addEventListener('change', renderEmailPreview));
     renderEmailPreview();
+
+    const virtualAssessmentCheckbox = document.getElementById('virtualAssessmentCheckbox');
+    const virtualAssessmentFields = document.getElementById('virtualAssessmentFields');
+    function syncVirtualAssessmentVisibility() {
+      const isVisible = virtualAssessmentCheckbox.checked;
+      virtualAssessmentFields.style.display = isVisible ? 'block' : 'none';
+      if (isVisible) {
+        const today = new Date();
+        const dateInput = document.getElementById('virtualAssessmentDateInput');
+        if (!dateInput.value) {
+          dateInput.value = today.toISOString().split('T')[0];
+        }
+      }
+    }
+    virtualAssessmentCheckbox.addEventListener('change', syncVirtualAssessmentVisibility);
+    syncVirtualAssessmentVisibility();
 
     document.getElementById('sendEmailBtn').addEventListener('click', async () => {
       const sendButton = document.getElementById('sendEmailBtn');
@@ -2387,6 +2446,9 @@
       const location = document.getElementById('locationInput').value.trim();
       const isRetake = document.getElementById('retakeCheckbox').checked;
       const isFollowUp = document.getElementById('followAssessmentCheckbox').checked;
+      const isVirtualAssessment = document.getElementById('virtualAssessmentCheckbox').checked;
+      const virtualAssessmentDate = document.getElementById('virtualAssessmentDateInput').value;
+      const virtualAssessmentTime = document.getElementById('virtualAssessmentTimeInput').value;
       const selectedPackages = getOrderedSelectedPackageCheckboxes();
       const packages = selectedPackages.map(checkbox => ({
         name: checkbox.dataset.package,
@@ -2399,14 +2461,24 @@
         return;
       }
 
-      if (!candidateName || !recipient || !location || packages.length === 0) {
+      if (!candidateName || !recipient || !location || (!isVirtualAssessment && packages.length === 0)) {
         emailStatus.textContent = '';
         emailStatus.className = 'email-status';
-        alert('Please enter the candidate name, email, location, and select at least one package.');
+        alert('Please enter the candidate name, email, location, and select at least one package for regular assessment emails.');
         return;
       }
 
-      const payload = { name: candidateName, email: recipient, location, packages, isRetake, isFollowUp };
+      const payload = {
+        name: candidateName,
+        email: recipient,
+        location,
+        packages,
+        isRetake,
+        isFollowUp,
+        isVirtualAssessment,
+        virtualAssessmentDate,
+        virtualAssessmentTime
+      };
       sendButton.disabled = true;
       emailStatus.textContent = 'Sending Assessment...........';
       emailStatus.className = 'email-status sending';
@@ -2451,13 +2523,21 @@
       const subjectPrefix = isFollowUp
         ? 'Sagility Assessment Follow Up_'
         : isRetake ? 'Sagility Assessment Retake_' : 'Sagility Assessment_';
-      const subject = `${subjectPrefix}${candidateName}_${location}`;
-      const intro = isFollowUp
+      const subject = isVirtualAssessment
+        ? `Virtual Assessment Schedule – Sagility Recruitment_${location}`
+        : `${subjectPrefix}${candidateName}_${location}`;
+      const scheduleDate = virtualAssessmentDate ? new Date(`${virtualAssessmentDate}T12:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Please choose a date';
+      const scheduleTime = virtualAssessmentTime || 'Not selected';
+      const intro = isVirtualAssessment
+        ? `Hi ${candidateName},\n\nAs part of your application, we would like to inform you that you are scheduled for a virtual assessment on the details below:`
+        : isFollowUp
         ? `Hi ${candidateName},\n\nGood Day!\n\nI would like to follow up on your assessment completion. Kindly complete the assessments below at your earliest convenience.`
         : isRetake
         ? `Hi ${candidateName},\n\nSorry to inform you that you did not achieve the required assessment score(s) on one or more of the tests below. Please click the link(s) below to retake your assessment.\n\nPlease click link/s below to start your assessment.`
         : `Hi ${candidateName},\n\nGood Day!\n\nPlease click link/s below to start your assessment.`;
-      const body = `${intro}\n\n${packageLinks.join('\n')}\n\nBefore You Start:\n\n• We recommend using a Laptop/PC and a headset.\n• Make sure you are in a quiet environment.\n• Use your active email address and enter the security code when prompted.\n• Read all instructions carefully before taking the assessment.\n\nNeed Assistance?\n\nIf you need assistance, you may join our Virtual Assessment session so we can guide you on how to take your assessment or provide any necessary follow-ups.\n\nTime: 11am-8pm MNL\nLink: Meeting Invite\nMeeting ID: 479 656 747 406 7\nPasscode: vi3nV3NB\n\nImportant Reminders:\n\n⚠️ Use the assessment link only once.\n🔒 Do not share or forward the link.\n📍 The system records IP address and location.\n📇 Assessment materials are confidential. Any misuse may affect your application.\n\nFor questions or assistance, please contact:\nPHLTestAdmin@Sagilityhealth.com\n\nThank you, and good luck with your assessment!\n\nBest Regards,\n\nTalent Acquisition- Sagility Recruitment - Test Admin\n${location}`;
+      const body = isVirtualAssessment
+        ? `${intro}\n\nDate: ${scheduleDate}\nTime: ${scheduleTime}\nMS Teams Link: https://teams.microsoft.com/l/meetup-join/19%3ameeting_YWUyMzUzYzYtNTgxYS00ZWVhLWJjN2UtNTA4YWM2Mzg1Zjdk%40thread.v2/0?context=%7b%22Tid%22%3a%22c0745124-84a4-4909-bb95-307ad5a8ae15%22%2c%22Oid%22%3a%22e7eb26f1-7544-4bac-bfac-c4674034791e%22%7d\nMeeting ID: 479 656 747 406 7\nPasscode: vi3nV3NB\n\nPlease make sure to join on or before your scheduled time, as we will only wait for 10 minutes before closing the virtual assessment room.\n\nIf you have any questions or encounter any issues, feel free to reach out.\nPHLTestAdmin@Sagilityhealth.com\n\nWe look forward to your participation.\n\nBest Regards\nSagility Recruitment_${location}`
+        : `${intro}\n\n${packageLinks.join('\n')}\n\nBefore You Start:\n\n• We recommend using a Laptop/PC and a headset.\n• Make sure you are in a quiet environment.\n• Use your active email address and enter the security code when prompted.\n• Read all instructions carefully before taking the assessment.\n\nNeed Assistance?\n\nIf you need assistance, you may join our Virtual Assessment session so we can guide you on how to take your assessment or provide any necessary follow-ups.\n\nTime: 11am-8pm MNL\nLink: Meeting Invite\nMeeting ID: 479 656 747 406 7\nPasscode: vi3nV3NB\n\nImportant Reminders:\n\n⚠️ Use the assessment link only once.\n🔒 Do not share or forward the link.\n📍 The system records IP address and location.\n📇 Assessment materials are confidential. Any misuse may affect your application.\n\nFor questions or assistance, please contact:\nPHLTestAdmin@Sagilityhealth.com\n\nThank you, and good luck with your assessment!\n\nBest Regards,\n\nTalent Acquisition- Sagility Recruitment - Test Admin\n${location}`;
       window.location.href = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       await addSentHistory(candidateName, recipient, location, packages, isFollowUp);
       emailStatus.textContent = 'Email draft opened.';

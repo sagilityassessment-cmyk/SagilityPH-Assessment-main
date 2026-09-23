@@ -23,17 +23,22 @@ function doPost(e) {
     const packages = Array.isArray(request.packages) ? request.packages : [];
     const isRetake = request.isRetake === true;
     const isFollowUp = request.isFollowUp === true;
+    const isVirtualAssessment = request.isVirtualAssessment === true;
+    const virtualAssessmentDate = String(request.virtualAssessmentDate || '').trim();
+    const virtualAssessmentTime = String(request.virtualAssessmentTime || '').trim();
 
-    if (!candidateName || !candidateEmail || !location || packages.length === 0) {
-      return jsonResponse({ success: false, error: 'Name, email, location, and at least one package are required.' });
+    if (!candidateName || !candidateEmail || !location || (!isVirtualAssessment && packages.length === 0)) {
+      return jsonResponse({ success: false, error: 'Name, email, and location are required. For non-virtual assessments, at least one package is required.' });
     }
 
     const subjectPrefix = isFollowUp
       ? 'Sagility Assessment Follow Up_'
       : isRetake ? 'Sagility Assessment Retake_' : 'Sagility Assessment_';
-    const subject = `${subjectPrefix}${candidateName}_${location}`;
-    const plainTextBody = buildPlainTextBody(candidateName, location, packages, isRetake, isFollowUp);
-    const htmlBody = buildHtmlBody(candidateName, location, packages, isRetake, isFollowUp);
+    const subject = isVirtualAssessment
+      ? `Virtual Assessment Schedule – Sagility Recruitment_${location}`
+      : `${subjectPrefix}${candidateName}_${location}`;
+    const plainTextBody = buildPlainTextBody(candidateName, location, packages, isRetake, isFollowUp, isVirtualAssessment, virtualAssessmentDate, virtualAssessmentTime);
+    const htmlBody = buildHtmlBody(candidateName, location, packages, isRetake, isFollowUp, isVirtualAssessment, virtualAssessmentDate, virtualAssessmentTime);
 
     MailApp.sendEmail({
       to: candidateEmail,
@@ -50,7 +55,32 @@ function doPost(e) {
   }
 }
 
-function buildPlainTextBody(candidateName, location, packages, isRetake, isFollowUp) {
+function buildPlainTextBody(candidateName, location, packages, isRetake, isFollowUp, isVirtualAssessment, virtualAssessmentDate, virtualAssessmentTime) {
+  if (isVirtualAssessment) {
+    const scheduleDate = virtualAssessmentDate ? new Date(`${virtualAssessmentDate}T12:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Please choose a date';
+    const scheduleTime = virtualAssessmentTime || 'Not selected';
+
+    return `Hi ${candidateName},
+
+As part of your application, we would like to inform you that you are scheduled for a virtual assessment on the details below:
+
+Date: ${scheduleDate}
+Time: ${scheduleTime}
+MS Teams Link: ${MEETING_LINK}
+Meeting ID: ${MEETING_ID}
+Passcode: ${MEETING_PASSCODE}
+
+Please make sure to join on or before your scheduled time, as we will only wait for 10 minutes before closing the virtual assessment room.
+
+If you have any questions or encounter any issues, feel free to reach out.
+${ADMIN_EMAIL}
+
+We look forward to your participation.
+
+Best Regards
+Sagility Recruitment_${location}`;
+  }
+
   const packageLines = packages.map(item => `${item.name} - ${item.url}`).join('\n');
   const introduction = isFollowUp
     ? 'Good Day!\n\nI would like to follow up on your assessment completion. Kindly complete the assessments below at your earliest convenience:'
@@ -105,7 +135,21 @@ Talent Acquisition- Sagility Recruitment - Test Admin
 ${location}`;
 }
 
-function buildHtmlBody(candidateName, location, packages, isRetake, isFollowUp) {
+function buildHtmlBody(candidateName, location, packages, isRetake, isFollowUp, isVirtualAssessment, virtualAssessmentDate, virtualAssessmentTime) {
+  if (isVirtualAssessment) {
+    const scheduleDate = virtualAssessmentDate ? new Date(`${virtualAssessmentDate}T12:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Please choose a date';
+    const scheduleTime = virtualAssessmentTime || 'Not selected';
+
+    return `<p>Hi ${escapeHtml(candidateName)},</p>
+<p>As part of your application, we would like to inform you that you are scheduled for a virtual assessment on the details below:</p>
+<p><strong>Date:</strong> ${escapeHtml(scheduleDate)}<br><strong>Time:</strong> ${escapeHtml(scheduleTime)}</p>
+<p><strong>MS Teams Link:</strong> <a href="${escapeAttribute(MEETING_LINK)}">Meeting Invite</a><br><strong>Meeting ID:</strong> ${MEETING_ID}<br><strong>Passcode:</strong> ${MEETING_PASSCODE}</p>
+<p>Please make sure to join on or before your scheduled time, as we will only wait for 10 minutes before closing the virtual assessment room.</p>
+<p>If you have any questions or encounter any issues, feel free to reach out.<br><a href="mailto:${ADMIN_EMAIL}">${ADMIN_EMAIL}</a></p>
+<p>We look forward to your participation.</p>
+<p><strong>Best Regards,<br>Sagility Recruitment_${escapeHtml(location)}</strong></p>`;
+  }
+
   const packageLinks = packages.map(item =>
     `<li><strong>${escapeHtml(item.name)}:</strong> <a href="${escapeAttribute(item.url)}">Click here</a></li>`
   ).join('');
